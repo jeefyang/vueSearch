@@ -1,0 +1,35 @@
+{
+  "name": "vue3-trpc",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:vue": "vite -c vite.config.vue.ts",
+    "dev:node": "vite -c vite.config.node.ts",
+    "dev:server": "ts-node --project tsconfig.server.json  ./server.ts",
+    "build": "vue-tsc && vite build",
+    "build:all":"vue-tsc && vite build -c vite.config.node.ts --outDir build_node && vite build -c vite.config.vue.ts --outDir build_vue",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@trpc/client": "^10.36.0",
+    "@trpc/react-query": "^10.36.0",
+    "@trpc/server": "^10.36.0",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "vue": "^3.3.4",
+    "zod": "^3.21.4",
+    "vite-plugin-node": "^3.0.2"
+  },
+  "devDependencies": {
+    "@tsconfig/node18": "^18.2.0",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.7",
+    "vue-tsc": "^1.8.5"
+  }
+}

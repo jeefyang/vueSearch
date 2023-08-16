@@ -9,7 +9,7 @@ import sys,getopt
 big_data:tuple[str]=[""]
 
 def main(argv):
-    http_url="http://localhost:3008/upload-avatar"
+    http_url="http://localhost:3008/uploadfile"
     basedir="./"
     outfile="index.txt"
     opts,args=getopt.getopt(argv,"",['basedir=','outfile=',"httpurl="])

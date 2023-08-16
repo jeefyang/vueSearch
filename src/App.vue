@@ -1,31 +1,32 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import HelloWorld from './components/HelloWorld.vue'
-import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
-import type { AppRouter } from './server/router';
+import { store } from "./store"
+import { jData } from './data';
+
 
 const trpcTest = ref("")
 
 onMounted(async () => {
-  const client = createTRPCProxyClient<AppRouter>({
-    links: [
-      httpBatchLink({
-        url: 'http://localhost:3008/trpc',
-      },),
-    ]
-  })
-  const withoutInputQuery = await client.hello.greeting.query();
-  trpcTest.value += withoutInputQuery + "\n"
-  console.log(withoutInputQuery);
 
-  const withInputQuery = await client.hello.greeting.query({ name: 'Alex' });
-  trpcTest.value += withInputQuery + "\n"
-  console.log(withInputQuery);
-  console.log("aa")
- 
-  const xx = await client.hello.push.mutate({ file: { x: "a", y: "b", z: "c" }, name: "xx" })
-  console.log(xx)
-  console.log("qq")
+  let json: JConfigType = await fetch("./config.jsonc").then(res => res.json())
+
+  if (import.meta.env.DEV) {
+    store.serverHost = "http://localhost:3008"
+  }
+  else if (import.meta.env.PROD) {
+    store.serverHost = json.serverHost
+  }
+
+  await jData.initList()
+
+
+
+  for (let i = 0; i < jData.fileList.length; i++) {
+    let data = await jData.getFile(jData.fileList[i])
+    console.log(data)
+  }
+
 })
 
 </script>

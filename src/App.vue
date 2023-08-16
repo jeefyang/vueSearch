@@ -10,7 +10,7 @@ onMounted(async () => {
   const client = createTRPCProxyClient<AppRouter>({
     links: [
       httpBatchLink({
-        url: 'http://localhost:3006/trpc',
+        url: 'http://localhost:3008/trpc',
       },),
     ]
   })
@@ -21,6 +21,11 @@ onMounted(async () => {
   const withInputQuery = await client.hello.greeting.query({ name: 'Alex' });
   trpcTest.value += withInputQuery + "\n"
   console.log(withInputQuery);
+  console.log("aa")
+ 
+  const xx = await client.hello.push.mutate({ file: { x: "a", y: "b", z: "c" }, name: "xx" })
+  console.log(xx)
+  console.log("qq")
 })
 
 </script>
@@ -54,7 +59,7 @@ onMounted(async () => {
   filter: drop-shadow(0 0 2em #42b883aa);
 }
 
-.trpc { 
+.trpc {
   color: red;
 }
 </style>

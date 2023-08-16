@@ -12,6 +12,11 @@ const helloRouter = router({
     .query(({ input }) => {
       return `Hello ${input?.name ?? 'World'}`;
     }),
+  push: publicProcedure.input(z.object({ file: z.any(), name: z.string() })).mutation((input) => {
+    console.log(input)
+    
+
+  })
 });
 
 export const appRouter = router({

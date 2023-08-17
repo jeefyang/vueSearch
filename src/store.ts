@@ -16,5 +16,7 @@ export const store = reactive({
     /** 搜索 */
     search: <string>"",
     /** 是否正则 */
-    isReg: <boolean>false
+    isReg: <boolean>false,
+    /** 是否有文件夹搜索 */
+    haveFolder: <boolean>false
 })

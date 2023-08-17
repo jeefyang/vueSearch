@@ -8,4 +8,5 @@ type JFileType = {
     atime: number
     ctime: number
     mtime: number
+    type: "file" | 'folder'
 }

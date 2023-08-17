@@ -39,7 +39,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <van-config-provider theme="dark" class="big">
+  <van-config-provider theme="dark" class="theme">
     <div class="main" v-if="store.isloaded">
       <Search></Search>
       <div class="select">
@@ -71,7 +71,7 @@ onMounted(async () => {
   filter: drop-shadow(0 0 2em #42b883aa);
 }
 
-.big {
+.theme {
   height: 100%;
 }
 
@@ -89,6 +89,6 @@ onMounted(async () => {
 
 .fileList {
   flex-grow: 1;
-  overflow: scroll;
+  overflow: auto;
 }
 </style>

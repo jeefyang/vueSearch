@@ -1,63 +1,51 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue';
+import { jData } from '../data';
 
+const fileList = ref(<JFileType[]>[])
+
+onMounted(async () => {
+    fileList.value = await jData.getFileList()
+})
+
+const getsize = (size: number) => {
+    return (size / 1024 / 1024).toFixed(2) + 'MB'
+}
+
+const gettime = (ms: number) => {
+    let date = new Date(ms)
+    let y = date.getFullYear()
+    y = y >= 2000 ? (y - 2000) : y
+    let m = date.getMonth() + 1
+    let mstr = m >= 10 ? m : `0${m}`
+    let d = date.getDate()
+    let dstr = d >= 10 ? d : `0${d}`
+    let h = date.getHours()
+    let apm = h >= 12 ? "pm" : "am"
+    if (h > 12) {
+        h -= 12
+    }
+    let hstr = h >= 10 ? h : `0${h}`
+    let min = date.getMinutes()
+    let minstr = min >= 10 ? min : `0${min}`
+    return `${y}-${mstr}-${dstr} ${apm}:${hstr}:${minstr}`
+}
 </script>
 <template>
     <div>
         <table class="styled-table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Points</th>
+                    <th>path</th>
+                    <th>size</th>
+                    <th>date</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Dom</td>
-                    <td>6000</td>
-                </tr>
-                <tr>
-                    <td>Melissa</td>
-                    <td>5150</td>
-                </tr>
-                <tr>
-                    <td>Melissa</td>
-                    <td>5150</td>
-                </tr>
-                <tr>
-                    <td>Melissa</td>
-                    <td>5150</td>
-                </tr>
-                <tr>
-                    <td>Melissa</td>
-                    <td>5150</td>
-                </tr>
-                <tr>
-                    <td>Melissa</td>
-                    <td>5150</td>
-                </tr>
-                <tr>
-                    <td>Melissa</td>
-                    <td>5150</td>
-                </tr>
-                <tr>
-                    <td>Melissa</td>
-                    <td>5150</td>
-                </tr>
-                <tr>
-                    <td>Melissa</td>
-                    <td>5150</td>
-                </tr>
-                <tr>
-                    <td>Melissa</td>
-                    <td>5150</td>
-                </tr>
-                <tr>
-                    <td>Melissa</td>
-                    <td>5150</td>
-                </tr>
-                <tr>
-                    <td>Melissa</td>
-                    <td>5150</td>
+                <tr v-for="(item, index) in fileList" :key="index">
+                    <td>{{ item.name }}</td>
+                    <td>{{ getsize(item.size) }}</td>
+                    <td>{{ gettime(item.atime) }}</td>
                 </tr>
                 <!-- and so on... -->
             </tbody>

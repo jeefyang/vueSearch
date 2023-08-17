@@ -81,8 +81,10 @@ class JData {
                     atime: Number(arr[3]) * 1000,
                     ctime: Number(arr[4]) * 1000,
                     mtime: Number(arr[5]) * 1000,
+                    type: "file"
                 }
                 if (arr[0] == "0") {
+                    file.type = "folder"
                     cache.folders.push(file)
                 }
                 else if (arr[0] == "1") {
@@ -108,8 +110,10 @@ class JData {
         return cache
     }
 
-    getFileList() {
-
+    async getFileList() {
+        let data = await this.getFile(this.tagList[0].name)
+        let list: JFileType[] = [...data.files]
+        return list
     }
 }
 

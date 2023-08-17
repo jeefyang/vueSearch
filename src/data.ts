@@ -1,4 +1,3 @@
-import { number } from "zod"
 import { store } from "./store"
 
 class JData {
@@ -7,26 +6,57 @@ class JData {
         files: JFileType[],
         folders: JFileType[]
         name: string,
-        tag: string[],
-        firstTag: string
         baseDir: string
+    }[] = []
+
+    tagList: {
+        name: string,
+        tags: string[],
+        otherTags: string[],
+        firstTag: string
     }[] = []
 
     fileList: string[] = []
 
+    /** 一次产生多少个 */
+    onceCount: number = 50
+    /** 检查到第几个 */
+    checkNum: number = 0
+    /** 文件数量 */
+    fileCount: number = 0
+
     async initList() {
         let list: { data: string[] } = await fetch(store.serverHost + '/list').then(res => res.json())
         this.fileList = list.data
+        for (let i = 0; i < this.fileList.length; i++) {
+            let name = this.fileList[i].split(".")[0].split(".")[0]
+            let tag = name.split("_")
+            this.tagList.push({
+                name: name,
+                tags: tag,
+                firstTag: tag[0],
+                otherTags: tag.slice(1)
+            })
+        }
+    }
+
+    getFileTags() {
+        return jData.tagList.map(c => c.firstTag).join(',')
+    }
+
+    getOtherTags() {
+        let list: string[] = []
+        for (let i = 0; i < jData.tagList.length; i++) {
+            list.push(...jData.tagList[i].otherTags)
+        }
+        return list.join(',')
     }
 
     decodeFile(str: string, name: string) {
-        let tag = name.split(".")[0].split("_")
         let cache: (typeof this.cacheList)[number] = {
             files: [],
             folders: [],
-            name: name,
-            tag: tag,
-            firstTag: tag[0],
+            name: name.split(".")[0],
             baseDir: ""
         }
         let start = 1
@@ -76,6 +106,10 @@ class JData {
         let cache = this.decodeFile(file, name)
         this.cacheList.push(cache)
         return cache
+    }
+
+    getFileList() {
+
     }
 }
 

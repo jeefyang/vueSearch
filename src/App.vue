@@ -20,17 +20,22 @@ onMounted(async () => {
 
   await jData.initList()
 
+  jData.loadData()
+
   store.fileTagList = jData.getFileTags()
   store.otherTagList = jData.getOtherTags()
-  // store.fileTagList = "aaaa,bbbb,cccc,dddd,eeee,ffff,gggg,hhhh,iiii,jjjj,kkkk,llll, mmmm,nnnn,oooo,pppp,qqqq,rrrr,ssss,tttt,uuuu,vvvv,wwww,xxxx,yyyy,zzzz"
-  // store.otherTagList = "aaaa,bbbb,cccc,dddd,eeee,ffff,gggg,hhhh,iiii,jjjj,kkkk,llll, mmmm,nnnn,oooo,pppp,qqqq,rrrr,ssss,tttt,uuuu,vvvv,wwww,xxxx,yyyy,zzzz"
+  store.videoTagList = "mp4,wmv,avi,webm,mkv"
+  store.musicTagList = "mp3,aac,flac,m4a"
+  store.zipTagList = "zip,7z,7,rar,gz"
+  store.officeTagList = "xls,ppt,doc,docx,txt"
+  store.picTagList = "bmp,png,jpg,jpeg,webp,anpg"
+  store.codeTagList = "js,ts,py,html"
 
 
-
-  for (let i = 0; i < jData.fileList.length; i++) {
-    let data = await jData.getFile(jData.fileList[i])
-    console.log(data)
-  }
+  // for (let i = 0; i < jData.fileList.length; i++) {
+  //   let data = await jData.getFile(jData.fileList[i])
+  //   console.log(data)
+  // }
 
   store.isloaded = true
 
@@ -42,15 +47,33 @@ onMounted(async () => {
   <van-config-provider theme="dark" class="theme">
     <div class="main" v-if="store.isloaded">
       <Search></Search>
+      <div class="br"></div>
       <div class="select">
         <PopoverSelectButton list-tag="fileTagList" select-tag="selectFileTag" name="文件" pos="bottom">
         </PopoverSelectButton>
+        <div class="br"></div>
         <PopoverSelectButton list-tag="otherTagList" select-tag="selectOtherTag" name="标签" pos="bottom">
         </PopoverSelectButton>
+        <div class="br"></div>
+        <PopoverSelectButton list-tag="videoTagList" select-tag="selectExTag" name="影视" pos="bottom">
+        </PopoverSelectButton>
+        <div class="br"></div>
+        <PopoverSelectButton list-tag="codeTagList" select-tag="selectExTag" name="代码" pos="bottom">
+        </PopoverSelectButton>
+        <div class="br"></div>
+        <PopoverSelectButton list-tag="picTagList" select-tag="selectExTag" name="图片" pos="bottom">
+        </PopoverSelectButton>
+        <div class="br"></div>
+        <PopoverSelectButton list-tag="zipTagList" select-tag="selectExTag" name="压缩包" pos="bottom">
+        </PopoverSelectButton>
+        <div class="br"></div>
+        <PopoverSelectButton list-tag="officeTagList" select-tag="selectExTag" name="文档" pos="bottom">
+        </PopoverSelectButton>
+        <div class="br"></div>
+        <PopoverSelectButton list-tag="musicTagList" select-tag="selectExTag" name="音乐" pos="bottom">
+        </PopoverSelectButton>
       </div>
-      <div class="fileList">
-        <FileList></FileList>
-      </div>
+      <FileList></FileList>
     </div>
   </van-config-provider>
 </template>
@@ -81,14 +104,18 @@ onMounted(async () => {
   height: 100%;
 }
 
+.br {
+  width: 5px;
+  height: 5px;
+}
+
 .select {
   display: flex;
   flex-direction: row;
   /* justify-content: space-around; */
 }
 
-.fileList {
+.bigFileList {
   flex-grow: 1;
-  overflow: auto;
 }
 </style>

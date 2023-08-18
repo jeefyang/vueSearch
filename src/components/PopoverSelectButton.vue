@@ -3,8 +3,9 @@
 import { ref } from "vue"
 import { store } from "../store";
 import { PopoverPlacement } from "vant";
+import { jData } from "../data";
 
-const props = defineProps<{ listTag: "fileTagList" | "otherTagList", selectTag: "selectFileTag" | "selectOtherTag", name: string, pos: PopoverPlacement }>()
+const props = defineProps<{ listTag: "fileTagList" | "otherTagList" | "videoTagList" | "musicTagList" | "officeTagList" | "zipTagList" | "picTagList" | "codeTagList", selectTag: "selectFileTag" | "selectOtherTag" | "selectExTag", name: string, pos: PopoverPlacement }>()
 
 console.log(store[props.listTag])
 
@@ -20,18 +21,27 @@ const showPopover = ref(false);
 
 const selectTag = (item: (typeof btnList.value)[number]) => {
     item.v = !item.v
+    resetSelect()
 }
 
 const selectAll = () => {
     btnList.value.forEach(c => c.v = true)
+    resetSelect()
 }
 
 const selectClear = () => {
     btnList.value.forEach(c => c.v = false)
+    resetSelect()
 }
 
 const selectReverse = () => {
     btnList.value.forEach(c => c.v = !c.v)
+    resetSelect()
+}
+
+const resetSelect = () => {
+    store[props.selectTag] = btnList.value.filter(c => c.v).map(c => c.name).join(',')
+    jData.saveData()
 }
 
 

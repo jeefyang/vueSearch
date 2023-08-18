@@ -1,15 +1,52 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { jData } from '../data';
+import { store } from '../store';
 
 const fileList = ref(<JFileType[]>[])
+const divRef = ref(<HTMLDivElement>null)
+
 
 onMounted(async () => {
-    fileList.value = await jData.getFileList()
+    watch([() => store.search, () => store.isReg, () => store.haveFolder, () => store.isDisplayHidden, () => store.selectFileTag, () => store.selectOtherTag, () => store.selectExTag], () => {
+        resetData()
+    })
+    resetData()
 })
+
+const resetData = async () => {
+    await jData.resetFileList()
+    console.log(jData.conditionList)
+    fileList.value = []
+    await new Promise((res, _rej) => {
+        setTimeout(() => {
+            scrollLazyLoad(undefined, divRef.value)
+            res(undefined)
+        }, 100);
+    })
+}
 
 const getsize = (size: number) => {
     return (size / 1024 / 1024).toFixed(2) + 'MB'
+}
+
+const scrollLazyLoad = async (event?: MouseEvent | TouchEvent, div?: HTMLDivElement) => {
+    let delta = 200
+    if (!div) {
+        div = <any>event.target
+    }
+    let v = div.clientHeight + div.scrollTop - div.scrollHeight
+    if (v + delta < 0) {
+        return
+    }
+    fileList.value.push(...jData.scrollList())
+    await new Promise((res, _rej) => {
+        setTimeout(() => {
+            scrollLazyLoad(event, div)
+            res(undefined)
+        }, 100);
+    })
+    return
 }
 
 const gettime = (ms: number) => {
@@ -32,13 +69,14 @@ const gettime = (ms: number) => {
 }
 </script>
 <template>
-    <div>
+    <div class="fileList" @scroll="scrollLazyLoad" ref="divRef">
         <table class="styled-table">
             <thead>
                 <tr>
-                    <th>path</th>
+                    <th>name</th>
                     <th>size</th>
                     <th>date</th>
+                    <th>path</th>
                 </tr>
             </thead>
             <tbody>
@@ -46,10 +84,12 @@ const gettime = (ms: number) => {
                     <td>{{ item.name }}</td>
                     <td>{{ getsize(item.size) }}</td>
                     <td>{{ gettime(item.atime) }}</td>
+                    <td>{{ item.path }}</td>
                 </tr>
-                <!-- and so on... -->
+
             </tbody>
         </table>
+
     </div>
 </template>
 <style scoped>
@@ -71,6 +111,13 @@ const gettime = (ms: number) => {
 .styled-table th,
 .styled-table td {
     padding: 12px 15px;
+}
+
+.styled-table tbody tr td {
+    white-space: nowrap;
+    word-break: keep-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .styled-table tbody tr {
@@ -103,5 +150,10 @@ const gettime = (ms: number) => {
 .styled-table tbody tr.active-row {
     font-weight: bold;
     color: #009879;
+}
+
+.fileList {
+    flex-grow: 1;
+    overflow: auto;
 }
 </style>

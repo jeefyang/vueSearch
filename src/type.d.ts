@@ -3,10 +3,14 @@ type JConfigType = {
 }
 
 type JFileType = {
-    name: string
+    path: string
     size: number
     atime: number
     ctime: number
     mtime: number
+    name?: string
+    ex?: string
     type: "file" | 'folder'
+    isHideFolder?: boolean
+    isHideFile?: boolean
 }

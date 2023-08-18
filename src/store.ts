@@ -18,5 +18,14 @@ export const store = reactive({
     /** 是否正则 */
     isReg: <boolean>false,
     /** 是否有文件夹搜索 */
-    haveFolder: <boolean>false
+    haveFolder: <boolean>false,
+    /** 显示隐藏文件 */
+    isDisplayHidden: <boolean>false,
+    videoTagList: <string>"",
+    musicTagList: <string>"",
+    officeTagList: <string>"",
+    zipTagList: <string>"",
+    picTagList: <string>"",
+    codeTagList: <string>"",
+    selectExTag: <string>""
 })

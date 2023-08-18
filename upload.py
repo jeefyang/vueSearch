@@ -4,6 +4,7 @@ import os
 import stat
 import json
 import sys,getopt
+from pathlib import Path
 
 
 big_data:tuple[str]=[""]
@@ -12,6 +13,8 @@ def main(argv):
     http_url="http://localhost:3008/uploadfile"
     basedir="./"
     outfile="index.txt"
+    # basedir="\\\\192.168.123.3\\藏经阁\\jav"
+    # outfile="wd16t1-jav_av_exhentai_写真.txt"
     opts,args=getopt.getopt(argv,"",['basedir=','outfile=',"httpurl="])
     for opt,arg in opts:
         if opt in ("--basedir"):
@@ -23,7 +26,7 @@ def main(argv):
     big_data[0]+="?"+basedir+"?"
     loopFile(basedir)
 
-    with open(os.path.join(basedir,outfile),"w")as file:
+    with open(os.path.join(basedir,outfile),"w",encoding="utf-8")as file:
         file.write(big_data[0])
         file.close()
     
@@ -38,23 +41,26 @@ def post_data(http_url:str, file_url:str):
 
 
 def loopFile(dir:str,relate_dir:str=""):
-   
-    files=os.listdir(dir)
-    for file in files:
-        new_url=os.path.join(dir,file)
-        s=os.stat(new_url)
-        relate_url=os.path.join(relate_dir,file)
+    print("正在遍历:",dir)
+    filesys=os.scandir(dir)
+
+    for entry in filesys:
+        new_url=entry.path
+        # s=os.stat(new_url)
+        s=Path.stat(Path(new_url))
+        relate_url=os.path.join(relate_dir,entry.name)
         file_msg=""
-        if stat.S_ISDIR(s.st_mode) is True:
+        if entry.is_dir() is True:
             file_msg="0"+"*"+relate_url+"*"+str(s.st_size)+"*"+str(s.st_atime)+"*"+str(s.st_ctime)+"*"+str(s.st_mtime)+"|"
             # 测试
-        elif stat.S_ISREG(s.st_mode) is True:
+        elif entry.is_file() is True:
             file_msg="1"+"*"+relate_url+"*"+str(s.st_size)+"*"+str(s.st_atime)+"*"+str(s.st_ctime)+"*"+str(s.st_mtime)+"|"
             # 测试
         if file_msg!="":
             big_data[0]+=file_msg
-        if stat.S_ISDIR(s.st_mode) is True:
+        if entry.is_dir() is True:
             loopFile(new_url,relate_url)
+    filesys.close()
     return
 
 if __name__ == "__main__":

@@ -103,7 +103,7 @@ const gettime = (ms: number) => {
 }
 
 .styled-table thead tr {
-    background-color: #009879;
+    background-color: #c54948;
     color: #ffffff;
     text-align: left;
 }
@@ -120,27 +120,21 @@ const gettime = (ms: number) => {
     text-overflow: ellipsis;
 }
 
+
 .styled-table tbody tr {
-    border-bottom: 1px solid #dddddd;
-}
-
-.styled-table tbody tr:hover {
+    background-color: #5ba350;
     font-weight: bold;
-    color: #987200;
-    background-color: #1c7292;
+    color: #ffffff;
 }
-
 
 .styled-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
+    background-color: #4889f8;
     font-weight: bold;
-    color: #009879;
+    color: #ffffff;
 }
 
-.styled-table tbody tr:nth-of-type(even):hover {
-    font-weight: bold;
-    color: #987200;
-    background-color: #1c7292;
+.styled-table tbody tr:nth-of-type(even):hover,.styled-table tbody tr:hover {
+    color: #000000;
 }
 
 .styled-table tbody tr:last-of-type {

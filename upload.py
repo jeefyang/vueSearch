@@ -13,8 +13,7 @@ def main(argv):
     http_url="http://localhost:3008/uploadfile"
     basedir="./"
     outfile="index.txt"
-    # basedir="\\\\192.168.123.3\\藏经阁\\jav"
-    # outfile="wd16t1-jav_av_exhentai_写真.txt"
+
     opts,args=getopt.getopt(argv,"",['basedir=','outfile=',"httpurl="])
     for opt,arg in opts:
         if opt in ("--basedir"):
@@ -24,12 +23,15 @@ def main(argv):
         elif opt in ("--httpurl"):
             http_url=arg
     big_data[0]+="?"+basedir+"?"
-    loopFile(basedir)
 
+    print(http_url)
+    print(outfile)
+
+    loopFile(basedir)
     with open(os.path.join(basedir,outfile),"w",encoding="utf-8")as file:
         file.write(big_data[0])
         file.close()
-    
+
     post_data(http_url,os.path.join(basedir,outfile))
 
 

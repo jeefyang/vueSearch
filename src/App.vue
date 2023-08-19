@@ -8,16 +8,17 @@ import FileList from "./components/FileList.vue"
 
 
 onMounted(async () => {
-
-  let json: JConfigType = await fetch("./config.jsonc").then(res => res.json())
+  const jsoncStr = await fetch("./config.jsonc").then(res => res.text())
+  console.log(jsoncStr)
+  const configjson: JConfigType = eval(`(${jsoncStr})`)
+  console.log(configjson)
 
   if (import.meta.env.DEV) {
-    store.serverHost = "http://localhost:3008"
+    store.serverHost = `http://${configjson.node_dev_domain}:${configjson.node_dev_port}`
   }
   else if (import.meta.env.PROD) {
-    store.serverHost = json.serverHost
+    store.serverHost = configjson.node_build_host
   }
-
   await jData.initList()
 
   jData.loadData()

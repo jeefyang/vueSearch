@@ -3,12 +3,19 @@ import fileupload from "express-fileupload"
 import cors from "cors"
 import fs from "fs"
 import path from "path"
+import { fileURLToPath } from "url"
 
 
 const app = express()
 app.use(cors())
 app.use(fileupload({ "createParentPath": true }))
 const saveDir = "./uploadFile"
+let josnUrl = "./public/config.jsonc"
+if (import.meta.env.PROD) {
+    josnUrl = path.join(path.dirname(fileURLToPath(import.meta.url)), "config.jsonc")
+}
+const jsonStr = fs.readFileSync(josnUrl, "utf-8")
+const configjson: JConfigType = eval(`(${jsonStr})`)
 
 
 /** 上传文件 */
@@ -65,11 +72,13 @@ app.get("/getfile", async (req, res) => {
         console.log("没有找到文件", fileUrl)
         res.send(null)
     }
-
 })
 
+
+
 if (import.meta.env.PROD) {
-    app.listen(3008)
+    app.listen(configjson.node_build_post)
+    console.log(configjson.node_build_host)
 }
 
 export const viteNodeApp = app;

@@ -16,7 +16,7 @@ vue3和trpc混合开发的例子的,可以参考改装,也可以直接`clone`下
 - './upload.py':
   - 用于遍历文件夹信息并上传的功能,有三个接口
   - `--basedir`:遍历的文件夹,默认`./`
-  - `--outfile`:收集信息文件输出的文件名,默认`index.txt`,名字含有`_`将会自动分类
+  - `--outfile`:收集信息文件输出的文件名,默认`index.txt`,名字含有`_`将会自动分类,切记名字不能带中文
   - `--httpurl`:上传的网络路径,默认`http://localhost:3008/uploadfile` 
 - `upload.bat`:
   - 用于触发`upload.py`的批处理,需要根据需求修改

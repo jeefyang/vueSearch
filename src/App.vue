@@ -21,7 +21,7 @@ onMounted(async () => {
   }
   let url = new URL(document.location.href)
   if (url.searchParams.get('nodedomain')) {
-    let host = url.searchParams.get('nodedomain')
+    let host = `http${url.searchParams.get("nodessl") ? "s" : ''}://` + url.searchParams.get('nodedomain')
     if (url.searchParams.get('nodeport')) {
       host += `:${url.searchParams.get('nodeport')}`
     }

@@ -19,6 +19,14 @@ onMounted(async () => {
   else if (import.meta.env.PROD) {
     store.serverHost = configjson.node_build_host
   }
+  let url = new URL(document.location.href)
+  if (url.searchParams.get('nodedomain')) {
+    let host = url.searchParams.get('nodedomain')
+    if (url.searchParams.get('nodeport')) {
+      host += `:${url.searchParams.get('nodeport')}`
+    }
+    store.serverHost = host
+  }
   await jData.initList()
 
   jData.loadData()

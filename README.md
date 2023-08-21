@@ -10,7 +10,7 @@ vue3和trpc混合开发的例子的,可以参考改装,也可以直接`clone`下
 ## 其他文件使用
 
 - `./public/config.jsonc`:
-  - 用于配置服务器相关,触发`build`打包会自动分发到`build_node`和`build_vue`
+  - 用于配置服务器相关,触发`build`打包会自动分发到`build_node`和`build_vue`,此文件仅在开发时使用,生产模式后,`nodejs`一律只读`build_node`文件夹下的,均以触发`js`为当前文件夹,`vue`则只读`build_vue`,均以触发`index.html`为当前文件夹
 - `./express.js`:
   - vue生产环境的js,方便调用,也可以自备方案
 - './upload.py':

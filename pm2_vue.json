@@ -7,5 +7,10 @@
     "out_file": "./vue_search_vue.log",
     "watch_options": {
         "followSymlinks": false
-    }
+    },
+    "watch_delay": "3000",
+    "watch": [
+        "build_vue"
+    ],
+    "ignore_watch": []
 }

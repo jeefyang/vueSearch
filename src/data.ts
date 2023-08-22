@@ -190,6 +190,49 @@ class JData {
                 }
             })
         }
+        switch (store.sortType) {
+            case "名称":
+                this.conditionList = this.conditionList.sort((a, b) => {
+                    if (a.name == b.name) {
+                        return a.path > b.path ? 1 : -1
+                    }
+                    return a.name > b.name ? 1 : -1
+                })
+                break
+            case "大小":
+                this.conditionList = this.conditionList.sort((a, b) => {
+                    if (!a.size || !b.size || a.size == b.size) {
+                        if (a.path == b.path) {
+                            return a.name > b.name ? 1 : -1
+                        }
+                        return a.path > b.path ? 1 : -1
+                    }
+                    return a.size > b.size ? 1 : -1
+                })
+                break
+            case "日期":
+                this.conditionList = this.conditionList.sort((a, b) => {
+                    if (a.mtime == b.mtime) {
+                        if (a.path == b.path) {
+                            return a.name > b.name ? 1 : -1
+                        }
+                        return a.path > b.path ? 1 : -1
+                    }
+                    return a.mtime > b.mtime ? 1 : -1
+                })
+                break
+            case "路径":
+                this.conditionList = this.conditionList.sort((a, b) => {
+                    if (a.path == b.path) {
+                        return a.name > b.name ? 1 : -1
+                    }
+                    return a.path > b.path ? 1 : -1
+                })
+                break
+        }
+        if (store.isReverseSort) {
+            this.conditionList = this.conditionList.reverse()
+        }
         this.fileCount = this.conditionList.length
         this.checkNum = 0
     }

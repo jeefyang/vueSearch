@@ -8,7 +8,7 @@ const divRef = ref(<HTMLDivElement>null)
 
 
 onMounted(async () => {
-    watch([() => store.search, () => store.isReg, () => store.haveFolder, () => store.isDisplayHidden, () => store.selectFileTag, () => store.selectOtherTag, () => store.selectExTag], () => {
+    watch([() => store.search, () => store.isReg, () => store.haveFolder, () => store.isDisplayHidden, () => store.selectFileTag, () => store.selectOtherTag, () => store.selectExTag, () => store.sortType, () => store.isReverseSort], () => {
         resetData()
     })
     resetData()
@@ -67,16 +67,31 @@ const gettime = (ms: number) => {
     let minstr = min >= 10 ? min : `0${min}`
     return `${y}-${mstr}-${dstr} ${apm}:${hstr}:${minstr}`
 }
+
+const setSortType = (type: typeof store.sortType) => {
+    if (store.sortType == type) {
+        store.isReverseSort = !store.isReverseSort
+    }
+    else {
+        store.sortType = type
+    }
+
+}
+
 </script>
 <template>
     <div class="fileList" @scroll="scrollLazyLoad" ref="divRef">
         <table class="styled-table">
             <thead>
                 <tr>
-                    <th>name</th>
-                    <th>size</th>
-                    <th>date</th>
-                    <th>path</th>
+                    <th :style="{ 'background-color': store.sortType == '名称' ? (store.isReverseSort ? '#a566ed' : '#d35c5e') : undefined }"
+                        @click="setSortType('名称')">name</th>
+                    <th :style="{ 'background-color': store.sortType == '大小' ? (store.isReverseSort ? '#a566ed' : '#d35c5e') : undefined }"
+                        @click="setSortType('大小')">size</th>
+                    <th :style="{ 'background-color': store.sortType == '日期' ? (store.isReverseSort ? '#a566ed' : '#d35c5e') : undefined }"
+                        @click="setSortType('日期')">date</th>
+                    <th :style="{ 'background-color': store.sortType == '路径' ? (store.isReverseSort ? '#a566ed' : '#d35c5e') : undefined }"
+                        @click="setSortType('路径')">path</th>
                 </tr>
             </thead>
             <tbody>
@@ -133,7 +148,8 @@ const gettime = (ms: number) => {
     color: #ffffff;
 }
 
-.styled-table tbody tr:nth-of-type(even):hover,.styled-table tbody tr:hover {
+.styled-table tbody tr:nth-of-type(even):hover,
+.styled-table tbody tr:hover {
     color: #000000;
 }
 

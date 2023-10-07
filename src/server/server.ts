@@ -55,6 +55,17 @@ app.get("/list", async (_req, res) => {
     })
 })
 
+/** 下载代码 */
+app.get("/downloadcodepy", async (_req, res) => {
+    let code = fs.readFileSync('./upload.py')
+    res.send(code)
+})
+
+app.get("/downloadcodebat", async (_req, res) => {
+    let code = fs.readFileSync('./upload.bat')
+    res.send(code)
+})
+
 /** 获取文件 */
 app.get("/getfile", async (req, res) => {
     let filename = <string>req?.query?.filename

@@ -16,7 +16,6 @@ onMounted(async () => {
 
 const resetData = async () => {
     await jData.resetFileList()
-    console.log(jData.conditionList)
     fileList.value = []
     await new Promise((res, _rej) => {
         setTimeout(() => {

@@ -50,6 +50,50 @@ onMounted(async () => {
 
 })
 
+/**
+     * 复制字符串到剪切板
+     * @param str 字符串
+     * @returns 返回是否成功
+     */
+const copyStr = (str: string | number, isMobile?: boolean): boolean => {
+  if (isMobile) {
+    let div = document.createElement("div")
+    div.innerHTML = str.toString()
+    document.body.appendChild(div)
+    let range = document.createRange()
+    range.selectNode(div)
+    const selection = window.getSelection()
+    if (selection.rangeCount > 0) {
+      selection.removeAllRanges()
+    }
+    selection.addRange(range);
+    let check = document.execCommand("copy")
+    document.body.removeChild(div)
+    return check
+  }
+  let textArea = document.createElement('textarea')
+  textArea.innerHTML = str.toString()
+  document.body.appendChild(textArea)
+  textArea.select();
+  let check = document.execCommand('copy')
+  document.body.removeChild(textArea)
+  return check
+}
+
+const downloadCodeFunc = () => {
+  let py = document.createElement("a")
+  py.href = `${store.serverHost}/downloadcodepy`
+  py.download = 'upload.py'
+  py.click()
+  setTimeout(() => {
+    let bat = document.createElement("a")
+    bat.href = `${store.serverHost}/downloadcodebat`
+    bat.download = 'upload.bat'
+    bat.click()
+  }, 1000);
+
+}
+
 </script>
 
 <template>
@@ -81,6 +125,8 @@ onMounted(async () => {
         <div class="br"></div>
         <PopoverSelectButton list-tag="musicTagList" select-tag="selectExTag" name="音乐" pos="bottom">
         </PopoverSelectButton>
+        <div class="br"></div>
+        <van-button type="default" @click="downloadCodeFunc">下载代码</van-button>
       </div>
       <FileList></FileList>
     </div>
@@ -121,6 +167,7 @@ onMounted(async () => {
 .select {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   /* justify-content: space-around; */
 }
 

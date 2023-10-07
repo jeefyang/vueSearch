@@ -176,7 +176,7 @@ class JData {
             }
             let data = await this.getFile(this.tagList[i].fileName);
             [{ type: "file", data: data.files }, { type: "folder", data: data.folders }].forEach(c => {
-                if (c.type == "folder" && store.haveFolder) {
+                if (c.type == "folder" && !store.haveFolder) {
                     return
                 }
                 for (let i = 0; i < c.data.length; i++) {

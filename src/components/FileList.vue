@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
 import { jData } from '../data';
-import { store } from '../store';
+import { staticStore, store } from '../store';
 
 const fileList = ref(<JFileType[]>[])
 const divRef = ref(<HTMLDivElement>null)
 
 
 onMounted(async () => {
-    watch([() => store.search, () => store.isReg, () => store.haveFolder, () => store.isDisplayHidden, () => store.selectFileTag, () => store.selectOtherTag, () => store.selectExTag, () => store.sortType, () => store.isReverseSort], () => {
+    watch([() => store.search, () => store.isReg, () => store.haveFolder, () => store.isDisplayHidden, () => store.selectFileTag, () => store.selectOtherTag, () => store.selectExTag, () => store.sortType, () => store.isReverseSort, () => staticStore.path], () => {
         resetData()
     })
     resetData()
@@ -74,6 +74,11 @@ const setSortType = (type: typeof store.sortType) => {
     else {
         store.sortType = type
     }
+}
+
+const setPathFunc = (path: string) => {
+    console.log(path)
+    jData.setPath(path)
 
 }
 
@@ -98,7 +103,7 @@ const setSortType = (type: typeof store.sortType) => {
                     <td>{{ item.name }}</td>
                     <td>{{ getsize(item.size) }}</td>
                     <td>{{ gettime(item.atime) }}</td>
-                    <td>{{ item.path }}</td>
+                    <td @dblclick="setPathFunc(item.path)">{{ item.path }}</td>
                 </tr>
 
             </tbody>

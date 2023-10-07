@@ -1,4 +1,4 @@
-import { store } from "./store"
+import { staticStore, store } from "./store"
 
 class JData {
 
@@ -186,6 +186,9 @@ class JData {
                     if (exArr.length > 0 && (!c.data[i].ex || !exArr.includes(c.data[i].ex))) {
                         continue
                     }
+                    if (staticStore.path && c.data[i].path.slice(0, staticStore.path.length) != staticStore.path) {
+                        continue
+                    }
                     this.conditionList.push(c.data[i])
                 }
             })
@@ -269,6 +272,21 @@ class JData {
             this.checkNum = -1
         }
         return list
+    }
+
+    setPath(path: string) {
+        let url = new URL(document.location.href)
+        if (!path) {
+            url.searchParams.delete("path")
+            staticStore.path = ""
+        }
+        else {
+            url.searchParams.set("path", path)
+            staticStore.path = path
+        }
+        history.pushState("", "", url.href)
+        // document.location.href = url.href
+        console.log("xx")
     }
 
 

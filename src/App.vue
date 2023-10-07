@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { store } from "./store"
+import { staticStore, store } from "./store"
 import { jData } from './data';
 import PopoverSelectButton from './components/PopoverSelectButton.vue';
 import Search from "./components/Search.vue"
@@ -9,9 +9,7 @@ import FileList from "./components/FileList.vue"
 
 onMounted(async () => {
   const jsoncStr = await fetch("./config.jsonc").then(res => res.text())
-  console.log(jsoncStr)
   const configjson: JConfigType = eval(`(${jsoncStr})`)
-  console.log(configjson)
 
   if (import.meta.env.DEV) {
     store.serverHost = `http://${configjson.node_dev_domain}:${configjson.node_dev_port}`
@@ -26,6 +24,9 @@ onMounted(async () => {
       host += `:${url.searchParams.get('nodeport')}`
     }
     store.serverHost = host
+  }
+  if (url.searchParams.get("path")) {
+    staticStore.path = url.searchParams.get("path")
   }
   await jData.initList()
 
@@ -66,6 +67,10 @@ const downloadCodeFunc = async () => {
   }, 2000);
 }
 
+const clearPathFunc = () => {
+  jData.setPath("")
+}
+
 </script>
 
 <template>
@@ -97,6 +102,8 @@ const downloadCodeFunc = async () => {
         <div class="br"></div>
         <PopoverSelectButton list-tag="musicTagList" select-tag="selectExTag" name="音乐" pos="bottom">
         </PopoverSelectButton>
+        <div class="br"></div>
+        <van-button type="default" @click="clearPathFunc()">重置路径</van-button>
         <div class="br"></div>
         <van-button type="default" @click="downloadCodeFunc">下载代码</van-button>
       </div>

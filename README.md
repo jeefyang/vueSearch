@@ -27,3 +27,4 @@ vue3和trpc混合开发的例子的,可以参考改装,也可以直接`clone`下
 - `nodedomain`:域名,由于url原因,不带`http://`
 - `nodessl`:区分`https://`|`http://`,只要有值就默认`https://`
 - `nodeport`:端口,由于url原因,域名很难带上端口,故在这里增加端口
+- 'path':相对路径,用来快速搜索

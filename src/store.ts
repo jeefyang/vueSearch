@@ -40,3 +40,7 @@ export const store = reactive({
     /** 是否反序 */
     isReverseSort: <boolean>false
 })
+
+export const staticStore = reactive({
+    path: <string>""
+})

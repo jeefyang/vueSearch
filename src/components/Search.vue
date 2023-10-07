@@ -13,6 +13,7 @@ const setReg = () => {
 
 const setHaveFolder = () => {
     store.haveFolder = !store.haveFolder
+    // console.log(store.haveFolder)
     jData.saveData()
 }
 const setDisplayHidden = () => {

@@ -49,20 +49,21 @@ onMounted(async () => {
   store.isloaded = true
 
 })
+const downloadFile = async (url: string, fileName: string) => {
+  const str = await fetch(url).then(res => res.text())
+  const blob = new Blob([str])
+  let b64 = window.URL.createObjectURL(blob)
+  let a = document.createElement('a')
+  a.href = b64
+  a.download = fileName
+  a.click()
+}
 
-
-const downloadCodeFunc = () => {
-  let py = document.createElement("a")
-  py.href = `${store.serverHost}/downloadcodepy`
-  py.download = 'upload.py'
-  py.click()
+const downloadCodeFunc = async () => {
+  await downloadFile(`${store.serverHost}/downloadcodepy`, 'upload.py')
   setTimeout(() => {
-    let bat = document.createElement("a")
-    bat.href = `${store.serverHost}/downloadcodebat`
-    bat.download = 'upload.bat'
-    bat.click()
-  }, 1000);
-
+    downloadFile(`${store.serverHost}/downloadcodebat`, 'upload.bat')
+  }, 2000);
 }
 
 </script>

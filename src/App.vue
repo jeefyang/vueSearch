@@ -50,35 +50,6 @@ onMounted(async () => {
 
 })
 
-/**
-     * 复制字符串到剪切板
-     * @param str 字符串
-     * @returns 返回是否成功
-     */
-const copyStr = (str: string | number, isMobile?: boolean): boolean => {
-  if (isMobile) {
-    let div = document.createElement("div")
-    div.innerHTML = str.toString()
-    document.body.appendChild(div)
-    let range = document.createRange()
-    range.selectNode(div)
-    const selection = window.getSelection()
-    if (selection.rangeCount > 0) {
-      selection.removeAllRanges()
-    }
-    selection.addRange(range);
-    let check = document.execCommand("copy")
-    document.body.removeChild(div)
-    return check
-  }
-  let textArea = document.createElement('textarea')
-  textArea.innerHTML = str.toString()
-  document.body.appendChild(textArea)
-  textArea.select();
-  let check = document.execCommand('copy')
-  document.body.removeChild(textArea)
-  return check
-}
 
 const downloadCodeFunc = () => {
   let py = document.createElement("a")

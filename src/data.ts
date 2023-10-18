@@ -273,9 +273,8 @@ class JData {
             if (
                 !store.search ||
                 (store.isReg && this.conditionList[i].name.match(reg)) ||
-                (!store.isReg && this.conditionList[i].name.match(store.search))
+                (!store.isReg && this.conditionList[i].name.indexOf(store.search) != -1)
             ) {
-                console.log(i, this.conditionList[i].name)
                 list.push(this.conditionList[i])
                 max--
                 continue

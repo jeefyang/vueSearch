@@ -100,6 +100,40 @@ const setPathFunc = (item: JFileType, folderName?: string) => {
     jData.setPath(path)
 }
 
+const searchNameFunc = (name: string, p: -1 | 0 | 1) => {
+    if (!store.search) {
+        if (p == -1) {
+            return name
+        }
+        return ""
+    }
+    let start = 0
+    let end = 0
+    if (store.isReg) {
+        let d = name.match(RegExp(store.search, "i"))
+        start = (d["index"]) || 0
+        end = start + d[0].length
+    }
+    else {
+        let index = name.indexOf(store.search)
+        if (index != -1) {
+            start = index
+            end = start + store.search.length
+        }
+    }
+    if (p == -1) {
+        return name.slice(0, start)
+    }
+    else if (p == 0) {
+        return name.slice(start, end)
+    }
+    else if (p == 1) {
+        return name.slice(end, name.length)
+    }
+}
+
+
+
 </script>
 <template>
     <div class="fileList" @scroll="scrollLazyLoad" ref="divRef">
@@ -119,10 +153,17 @@ const setPathFunc = (item: JFileType, folderName?: string) => {
             <tbody>
                 <tr v-for="(item, index) in fileList" :key="index">
                     <td :class="item.type == 'folder' ? 'folderColor' : 'fileColor'"
-                        @dblclick="setPathFunc(item, item.name)">{{ item.name }}</td>
-                    <td>{{ getsize(item.size) }}</td>
-                    <td>{{ gettime(item.atime) }}</td>
-                    <td @dblclick="setPathFunc(item)">{{ item.headname }}:{{ item.path }}</td>
+                        @dblclick="setPathFunc(item, item.name)">
+                        <p>{{ searchNameFunc(item.name, -1) }}</p>
+                        <p class="searchHigh">{{ searchNameFunc(item.name, 0) }}</p>
+                        <p>{{ searchNameFunc(item.name, 1) }}</p>
+                    </td>
+                    <td :class="item.type == 'folder' ? 'folderColor' : 'fileColor'">{{ getsize(item.size) }}</td>
+                    <td :class="item.type == 'folder' ? 'folderColor' : 'fileColor'">{{ gettime(item.atime) }}</td>
+                    <td @dblclick="setPathFunc(item)">
+                        <p class="headnameColor">{{ item.headname }}:</p>
+                        <p>{{ item.path }}</p>
+                    </td>
                 </tr>
 
             </tbody>
@@ -144,6 +185,23 @@ const setPathFunc = (item: JFileType, folderName?: string) => {
     color: goldenrod
 }
 
+tr:hover .folderColor {
+    color: #000000;
+}
+
+.headnameColor {
+    color: goldenrod
+}
+
+.searchHigh {
+    color: #c54948;
+}
+
+tr:hover .searchHigh {
+    color: #c58a98;
+}
+
+
 .styled-table thead tr {
     background-color: #c54948;
     color: #ffffff;
@@ -160,6 +218,14 @@ const setPathFunc = (item: JFileType, folderName?: string) => {
     word-break: keep-all;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.styled-table tbody tr td p {
+    display: inline-block;
+}
+
+.styled-table tbody tr:hover td .headnameColor {
+    color: #b22135;
 }
 
 

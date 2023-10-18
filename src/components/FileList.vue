@@ -8,8 +8,17 @@ const divRef = ref(<HTMLDivElement>null)
 
 
 onMounted(async () => {
-    watch([() => store.search, () => store.isReg, () => store.haveFolder, () => store.isDisplayHidden, () => store.selectFileTag, () => store.selectOtherTag, () => store.selectExTag, () => store.sortType, () => store.isReverseSort, () => staticStore.path], () => {
+    // let time: NodeJS.Timeout
+    watch([() => store.search, () => store.isReg, () => store.haveFolder, () => store.isDisplayHidden, () => store.selectFileTag, () => store.selectOtherTag, () => store.selectExTag, () => store.sortType, () => store.isReverseSort, () => staticStore.path, () => staticStore.headname], () => {
+        // if (time) {
+        //     clearTimeout(time)
+        // }
+        // time = setTimeout(() => {
+        //     resetData()
+        //     clearTimeout(time)
+        // }, 200);
         resetData()
+        // console.log("111")
     })
     resetData()
 })
@@ -76,10 +85,19 @@ const setSortType = (type: typeof store.sortType) => {
     }
 }
 
-const setPathFunc = (path: string) => {
-    console.log(path)
-    jData.setPath(path)
 
+
+const setPathFunc = (item: JFileType, folderName?: string) => {
+    let path = item.path
+    if (folderName) {
+        if (item.type == "file") {
+            console.warn(folderName, "不是文件夹")
+            return
+        }
+        path += `/${folderName}`
+    }
+    jData.setHeadname(item.headname)
+    jData.setPath(path)
 }
 
 </script>
@@ -100,10 +118,11 @@ const setPathFunc = (path: string) => {
             </thead>
             <tbody>
                 <tr v-for="(item, index) in fileList" :key="index">
-                    <td>{{ item.name }}</td>
+                    <td :class="item.type == 'folder' ? 'folderColor' : 'fileColor'"
+                        @dblclick="setPathFunc(item, item.name)">{{ item.name }}</td>
                     <td>{{ getsize(item.size) }}</td>
                     <td>{{ gettime(item.atime) }}</td>
-                    <td @dblclick="setPathFunc(item.path)">{{ item.path }}</td>
+                    <td @dblclick="setPathFunc(item)">{{ item.headname }}:{{ item.path }}</td>
                 </tr>
 
             </tbody>
@@ -119,6 +138,10 @@ const setPathFunc = (path: string) => {
     font-family: sans-serif;
     min-width: 400px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.folderColor {
+    color: goldenrod
 }
 
 .styled-table thead tr {

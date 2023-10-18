@@ -112,6 +112,7 @@ class JData {
                 let basePath = basePathArr.join('/')
                 let fileName = arrpath[arrpath.length - 1]
                 let file: JFileType = {
+                    headname: cache.name.split("_")[0],
                     path: basePath,
                     size: Number(arr[2]),
                     atime: Number(arr[3]) * 1000,
@@ -186,6 +187,9 @@ class JData {
                     if (exArr.length > 0 && (!c.data[i].ex || !exArr.includes(c.data[i].ex))) {
                         continue
                     }
+                    if (staticStore.headname && c.data[i].headname != staticStore.headname) {
+                        continue
+                    }
                     if (staticStore.path && c.data[i].path.slice(0, staticStore.path.length) != staticStore.path) {
                         continue
                     }
@@ -204,7 +208,7 @@ class JData {
                 break
             case "大小":
                 this.conditionList = this.conditionList.sort((a, b) => {
-                    if (!a.size || !b.size || a.size == b.size) {
+                    if (a.size == b.size) {
                         if (a.path == b.path) {
                             return a.name > b.name ? 1 : -1
                         }
@@ -235,6 +239,8 @@ class JData {
         }
         if (store.isReverseSort) {
             this.conditionList = this.conditionList.reverse()
+            console.log(store.sortType)
+            console.log(this.conditionList)
         }
         this.fileCount = this.conditionList.length
         this.checkNum = 0
@@ -245,6 +251,7 @@ class JData {
         if (this.checkNum == -1) {
             return []
         }
+        console.log(this.checkNum)
         let max = this.onceCount
         let list: JFileType[] = []
         let reg = store.isReg ? RegExp(store.search, "i") : undefined
@@ -259,6 +266,7 @@ class JData {
                 (store.isReg && this.conditionList[i].name.match(reg)) ||
                 (!store.isReg && this.conditionList[i].name.match(store.search))
             ) {
+                console.log(i, this.conditionList[i].name)
                 list.push(this.conditionList[i])
                 max--
                 continue
@@ -274,7 +282,7 @@ class JData {
         return list
     }
 
-    setPath(path: string) {
+    setPath(path?: string) {
         let url = new URL(document.location.href)
         if (!path) {
             url.searchParams.delete("path")
@@ -285,8 +293,35 @@ class JData {
             staticStore.path = path
         }
         history.pushState("", "", url.href)
-        // document.location.href = url.href
-        console.log("xx")
+    }
+
+    setHeadname(headname: string) {
+        let url = new URL(document.location.href)
+        if (!headname) {
+            url.searchParams.delete("headname")
+            staticStore.headname = ""
+        }
+        else {
+            url.searchParams.set("headname", headname)
+            staticStore.headname = headname
+        }
+        history.pushState("", "", url.href)
+    }
+
+    rebackPath() {
+        let p = staticStore.path
+        if (!p) {
+            console.log('没有后退')
+            return
+        }
+        let arrpath = p.split(/\\|\//)
+        if (arrpath.length == 1 && !arrpath[0]) {
+            console.log('没有后退')
+            return
+        }
+        arrpath = arrpath.slice(0, -1)
+        let newPath = arrpath.join('/')
+        this.setPath(newPath)
     }
 
 

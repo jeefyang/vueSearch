@@ -25,4 +25,5 @@ type JFileType = {
     type: "file" | 'folder'
     isHideFolder?: boolean
     isHideFile?: boolean
+    headname: string
 }

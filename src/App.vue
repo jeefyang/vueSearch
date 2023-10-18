@@ -68,7 +68,12 @@ const downloadCodeFunc = async () => {
 }
 
 const clearPathFunc = () => {
+  jData.setHeadname("")
   jData.setPath("")
+}
+
+const rebackPathFunc = () => {
+  jData.rebackPath()
 }
 
 </script>
@@ -104,6 +109,8 @@ const clearPathFunc = () => {
         </PopoverSelectButton>
         <div class="br"></div>
         <van-button type="default" @click="clearPathFunc()">重置路径</van-button>
+        <div class="br"></div>
+        <van-button type="default" @click="rebackPathFunc()">后退</van-button>
         <div class="br"></div>
         <van-button type="default" @click="downloadCodeFunc">下载代码</van-button>
       </div>

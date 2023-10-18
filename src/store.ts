@@ -42,5 +42,6 @@ export const store = reactive({
 })
 
 export const staticStore = reactive({
-    path: <string>""
+    path: <string>"",
+    headname: <string>""
 })

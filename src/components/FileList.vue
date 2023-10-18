@@ -111,8 +111,8 @@ const searchNameFunc = (name: string, p: -1 | 0 | 1) => {
     let end = 0
     if (store.isReg) {
         let d = name.match(RegExp(store.search, "i"))
-        start = (d["index"]) || 0
-        end = start + d[0].length
+        start = (d?.["index"]) || 0
+        end = start + (d?.[0]?.length || 0)
     }
     else {
         let index = name.indexOf(store.search)

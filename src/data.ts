@@ -1,4 +1,5 @@
 import { staticStore, store } from "./store"
+import { showToast } from 'vant';
 
 class JData {
 
@@ -141,12 +142,23 @@ class JData {
     }
 
     async getFile(name: string) {
-        let index = this.cacheList.findIndex(c => c.name == name)
+        let index = this.cacheList.findIndex(c => c.name == name.split('.')[0])
         if (index != -1) {
             return this.cacheList[index]
         }
         let url = `${store.serverHost}/getfile?filename=${name}`
+        showToast({
+            message: `开始下载:${name}`,
+            position: 'bottom',
+            duration: 2000
+        });
+
         let file = await fetch(url).then(res => res.text())
+        showToast({
+            message: `下载完成:${name}`,
+            position: 'bottom',
+            duration: 2000
+        });
         let cache = this.decodeFile(file, name)
         this.cacheList.push(cache)
         return cache
@@ -239,8 +251,6 @@ class JData {
         }
         if (store.isReverseSort) {
             this.conditionList = this.conditionList.reverse()
-            console.log(store.sortType)
-            console.log(this.conditionList)
         }
         this.fileCount = this.conditionList.length
         this.checkNum = 0
@@ -251,7 +261,6 @@ class JData {
         if (this.checkNum == -1) {
             return []
         }
-        console.log(this.checkNum)
         let max = this.onceCount
         let list: JFileType[] = []
         let reg = store.isReg ? RegExp(store.search, "i") : undefined

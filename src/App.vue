@@ -28,6 +28,9 @@ onMounted(async () => {
   if (url.searchParams.get("path")) {
     staticStore.path = url.searchParams.get("path")
   }
+  if (url.searchParams.get("headname")) {
+    staticStore.headname = url.searchParams.get("headname")
+  }
   await jData.initList()
 
   jData.loadData()

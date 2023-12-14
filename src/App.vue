@@ -79,6 +79,15 @@ const rebackPathFunc = () => {
   jData.rebackPath()
 }
 
+const clearCacheFunc = async () => {
+  localStorage.clear()
+  await jData.clearDB()
+  let check = window.confirm("是否刷新?")
+  if (check) {
+    window.location.reload()
+  }
+}
+
 </script>
 
 <template>
@@ -115,7 +124,9 @@ const rebackPathFunc = () => {
         <div class="br"></div>
         <van-button type="default" @click="rebackPathFunc()">后退</van-button>
         <div class="br"></div>
-        <van-button type="default" @click="downloadCodeFunc">下载代码</van-button>
+        <van-button type="default" @click="downloadCodeFunc()">下载代码</van-button>
+        <div class="br"></div>
+        <van-button type="default" @click="clearCacheFunc()">清除缓存</van-button>
       </div>
       <FileList></FileList>
     </div>

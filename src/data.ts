@@ -1,3 +1,4 @@
+import { JIndexDBEX } from "./indexedDBEX";
 import { staticStore, store } from "./store"
 import { showToast } from 'vant';
 
@@ -10,13 +11,11 @@ class JData {
         baseDir: string
     }[] = []
 
-    tagList: {
-        name: string,
-        tags: string[],
-        otherTags: string[],
-        firstTag: string,
-        fileName: string
-    }[] = []
+    dbVersion: number = 2
+    dbName: string = "fileDB"
+    dbStoreName: string = "fileList"
+
+    tagList: JDataTagType[] = []
 
     fileList: string[] = []
     /** 条件列表 */
@@ -32,17 +31,20 @@ class JData {
     saveKey: string = "vue_search_save"
 
     async initList() {
-        let list: { data: string[] } = await fetch(store.serverHost + '/list').then(res => res.json())
+        let list: { data: string[], statsList: { mtime: string, size: number }[] } = await fetch(store.serverHost + '/list').then(res => res.json())
         this.fileList = list.data
         for (let i = 0; i < this.fileList.length; i++) {
-            let name = this.fileList[i].split(".")[0].split(".")[0]
+            let file = this.fileList[i]
+            let name = file.split(".")[0].split(".")[0]
             let tag = name.split("_")
             this.tagList.push({
                 name: name,
                 tags: tag,
                 firstTag: tag[0],
                 otherTags: tag.slice(1),
-                fileName: this.fileList[i]
+                fileName: file,
+                mtime: list?.statsList?.[i]?.mtime || "",
+                size: list?.statsList?.[i]?.size || 0
             })
         }
     }
@@ -146,20 +148,39 @@ class JData {
         if (index != -1) {
             return this.cacheList[index]
         }
-        let url = `${store.serverHost}/getfile?filename=${name}`
-        showToast({
-            message: `开始下载:${name}`,
-            position: 'bottom',
-            duration: 2000
-        });
+        let fileContent: string
+        let tag = this.tagList.find(c => c.fileName == name)
+        let dbData = await this.getFileByDB(name)
+        if (dbData && tag.mtime == dbData.mtime && tag.size == dbData.size) {
+            fileContent = dbData.content
+            showToast({
+                message: `直接读取数据库:${name}`,
+                position: 'bottom',
+                duration: 2000
+            });
+        }
+        else {
+            let url = `${store.serverHost}/getfile?filename=${name}`
+            showToast({
+                message: `开始下载:${name}`,
+                position: 'bottom',
+                duration: 2000
+            });
 
-        let file = await fetch(url).then(res => res.text())
-        showToast({
-            message: `下载完成:${name}`,
-            position: 'bottom',
-            duration: 2000
-        });
-        let cache = this.decodeFile(file, name)
+            fileContent = await fetch(url).then(res => res.text())
+            showToast({
+                message: `下载完成:${name}`,
+                position: 'bottom',
+                duration: 2000
+            });
+            await this.updateFileDB(tag, fileContent)
+            showToast({
+                message: `更新数据库完成:${name}`,
+                position: 'bottom',
+                duration: 2000
+            });
+        }
+        let cache = this.decodeFile(fileContent, name)
         this.cacheList.push(cache)
         return cache
     }
@@ -330,6 +351,50 @@ class JData {
         arrpath = arrpath.slice(0, -1)
         let newPath = arrpath.join('/')
         this.setPath(newPath)
+    }
+
+    async dbInit() {
+        let db = new JIndexDBEX(this.dbName, this.dbVersion)
+        db.onupgradeneeded = (_e, t) => {
+            db.deleteStore(this.dbStoreName)
+            db.createStore(this.dbStoreName, { keyPath: "name" })
+            db.getJStore(this.dbStoreName, "readwrite", t).createIndex('name', "name", { 'unique': true })
+            console.log("数据库版本更新", this.dbVersion)
+        }
+        await db.init()
+
+        return db
+    }
+
+    async getFileByDB(name: string) {
+        let db = await this.dbInit()
+        let s = db.getJStore<fileDBType>('fileList', "readonly")
+        try {
+            let data = await s.find(name, "name")
+            db.base.close()
+            return data
+        }
+        catch {
+            db.base.close()
+            return undefined
+        }
+        return
+    }
+
+    async updateFileDB(data: JDataTagType, content: string) {
+        let db = await this.dbInit()
+        db.createStore(this.dbStoreName, { keyPath: "name" })
+        let s = db.getJStore<fileDBType>(this.dbStoreName, "readwrite")
+        await s.modify({ name: data.fileName, mtime: data.mtime, size: data.size, content })
+        db.base.close()
+    }
+
+    async clearDB() {
+        let db = new JIndexDBEX("fileDB", this.dbVersion)
+        await db.init()
+        await db.deleteDB()
+        db.base.close()
+        return
     }
 
 

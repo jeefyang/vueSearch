@@ -27,3 +27,24 @@ type JFileType = {
     isHideFile?: boolean
     headname: string
 }
+
+type JDataTagType = {
+    name: string,
+    tags: string[],
+    otherTags: string[],
+    firstTag: string,
+    fileName: string
+    mtime: string,
+    size: number
+}
+
+interface EventTarget {
+    result: IDBDatabase
+}
+
+type fileDBType = {
+    name: string
+    mtime: string
+    size: number
+    content: string
+}

@@ -49,9 +49,14 @@ app.post("/uploadfile", async (req, res) => {
 /** 获取文件列表 */
 app.get("/list", async (_req, res) => {
     let files = fs.readdirSync(saveDir)
+
+    let statsList = files.map(c => {
+        return fs.statSync(path.join(saveDir, c))
+    })
     res.send({
         status: true,
-        data: files
+        data: files,
+        statsList: statsList
     })
 })
 

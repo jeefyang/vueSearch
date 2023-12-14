@@ -1,13 +1,14 @@
 <script setup lang="ts">
 
-import { ref } from "vue"
+import { ref, defineEmits } from "vue"
 import { store } from "../store";
 import { PopoverPlacement } from "vant";
 import { jData } from "../data";
 
-const props = defineProps<{ listTag: "fileTagList" | "otherTagList" | "videoTagList" | "musicTagList" | "officeTagList" | "zipTagList" | "picTagList" | "codeTagList", selectTag: "selectFileTag" | "selectOtherTag" | "selectExTag", name: string, pos: PopoverPlacement }>()
+const props = defineProps<{ listTag: "fileTagList" | "otherTagList" | "videoTagList" | "musicTagList" | "officeTagList" | "zipTagList" | "picTagList" | "codeTagList" | "delFileList", selectTag: "selectFileTag" | "selectOtherTag" | "selectExTag" | "selectDelFileTag", name: string, pos: PopoverPlacement }>()
 
-console.log(store[props.listTag])
+const emit = defineEmits(["onclose"])
+
 
 const btnList = ref(<{ name: string, v: boolean }[]>[])
 let list = store[props.listTag].split(',')
@@ -15,7 +16,6 @@ let select = store[props.selectTag].split(',')
 for (let i = 0; i < list.length; i++) {
     btnList.value.push({ name: list[i], v: select.includes(list[i]) })
 }
-
 
 const showPopover = ref(false);
 
@@ -44,11 +44,15 @@ const resetSelect = () => {
     jData.saveData()
 }
 
+const closeDiv = () => {
+    emit("onclose")
+}
+
 
 </script>
 <template>
     <div>
-        <van-popup v-model:show="showPopover" position="top" :style="{ padding: '64px' }">
+        <van-popup v-model:show="showPopover" position="top" :style="{ padding: '64px' }" @closed="closeDiv">
             <div class="big">
                 <div class="btn_parent tag">
                     <van-button v-for="(item, index) in btnList" :key="index" class="btn_child" :plain="!item.v"

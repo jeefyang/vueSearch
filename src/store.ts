@@ -35,6 +35,10 @@ export const store = reactive({
     codeTagList: <string>"",
     /** 选中的后缀名 */
     selectExTag: <string>"",
+    /** 删除的文件标签 */
+    delFileList: <string>"",
+    /** 选中的要删除的文件夹标签 */
+    selectDelFileTag: <string>"",
     /** 排列顺序 */
     sortType: <"名称" | "大小" | "路径" | "日期">"名称",
     /** 是否反序 */

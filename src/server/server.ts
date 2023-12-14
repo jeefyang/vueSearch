@@ -90,6 +90,24 @@ app.get("/getfile", async (req, res) => {
     }
 })
 
+app.get("/delfile", async (req, res) => {
+    let filename = <string>req?.query?.filename
+    if (!filename) {
+        console.log("文件参数找不到")
+        res.send(null)
+        return
+    }
+    let fileUrl = path.join(saveDir, filename)
+    try {
+        fs.rmSync(fileUrl)
+        res.send(`${fileUrl} was del!!!`)
+    }
+    catch {
+        console.log("没有找到文件", fileUrl)
+        res.send(null)
+    }
+})
+
 
 
 if (import.meta.env.PROD) {

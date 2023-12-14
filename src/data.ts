@@ -185,6 +185,23 @@ class JData {
         return cache
     }
 
+    async delFile(name: string) {
+        let url = `${store.serverHost}/delfile?filename=${name}`
+        showToast({
+            message: `开始删除:${name}`,
+            position: 'bottom',
+            duration: 2000
+        });
+        let stat = await fetch(url)
+        console.log(stat)
+        showToast({
+            message: `删除完成:${name}`,
+            position: 'bottom',
+            duration: 2000
+        });
+        return
+    }
+
     async getFileList() {
         let data = await this.getFile(this.tagList[0].name)
         let list: JFileType[] = [...data.files.filter(c => !c.isHideFile && !c.isHideFolder)]
@@ -352,6 +369,7 @@ class JData {
         let newPath = arrpath.join('/')
         this.setPath(newPath)
     }
+
 
     async dbInit() {
         let db = new JIndexDBEX(this.dbName, this.dbVersion)

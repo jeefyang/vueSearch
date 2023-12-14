@@ -43,6 +43,8 @@ onMounted(async () => {
   store.officeTagList = "xls,ppt,doc,docx,txt"
   store.picTagList = "bmp,png,jpg,jpeg,webp,anpg"
   store.codeTagList = "js,ts,py,html"
+  store.delFileList = jData.tagList.map(c => c.fileName).join(',')
+  store.selectDelFileTag = ""
 
 
   // for (let i = 0; i < jData.fileList.length; i++) {
@@ -88,6 +90,34 @@ const clearCacheFunc = async () => {
   }
 }
 
+const delFileFunc = async () => {
+  console.log(store.selectDelFileTag)
+  if (!store.selectDelFileTag) {
+    return
+  }
+  let check = confirm("是否要删除文件?")
+  if (!check)
+    return
+  check = confirm("真的要删除文件吗?")
+  if (!check)
+    return
+  check = confirm("最后确定真的要删除文件吗?")
+  if (!check)
+    return
+  check = confirm(`确定要删除${store.selectDelFileTag}.请确认?`)
+  if (!check)
+    return
+  let list = store.selectDelFileTag.split(',')
+  for (let i = 0; i < list.length; i++) {
+    let c = list[i]
+    await jData.delFile(c)
+  }
+  check = confirm(`已经完全删除,是否刷新`)
+  if (check) {
+    window.location.reload()
+  }
+}
+
 </script>
 
 <template>
@@ -118,6 +148,10 @@ const clearCacheFunc = async () => {
         </PopoverSelectButton>
         <div class="br"></div>
         <PopoverSelectButton list-tag="musicTagList" select-tag="selectExTag" name="音乐" pos="bottom">
+        </PopoverSelectButton>
+        <div class="br"></div>
+        <PopoverSelectButton list-tag="delFileList" select-tag="selectDelFileTag" name="删除" pos="bottom"
+          @onclose="delFileFunc">
         </PopoverSelectButton>
         <div class="br"></div>
         <van-button type="default" @click="clearPathFunc()">重置路径</van-button>

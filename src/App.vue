@@ -3,6 +3,7 @@ import { onMounted } from 'vue';
 import { staticStore, store } from "./store"
 import { jData } from './data';
 import PopoverSelectButton from './components/PopoverSelectButton.vue';
+import PopoverCodeButton from './components/PopoverCodeButton.vue';
 import Search from "./components/Search.vue"
 import FileList from "./components/FileList.vue"
 
@@ -55,22 +56,7 @@ onMounted(async () => {
   store.isloaded = true
 
 })
-const downloadFile = async (url: string, fileName: string) => {
-  const str = await fetch(url).then(res => res.text())
-  const blob = new Blob([str])
-  let b64 = window.URL.createObjectURL(blob)
-  let a = document.createElement('a')
-  a.href = b64
-  a.download = fileName
-  a.click()
-}
 
-const downloadCodeFunc = async () => {
-  await downloadFile(`${store.serverHost}/downloadcodepy`, 'upload.py')
-  setTimeout(() => {
-    downloadFile(`${store.serverHost}/downloadcodebat`, 'upload.bat')
-  }, 2000);
-}
 
 const clearPathFunc = () => {
   jData.setHeadname("")
@@ -158,7 +144,7 @@ const delFileFunc = async () => {
         <div class="br"></div>
         <van-button type="default" @click="rebackPathFunc()">后退</van-button>
         <div class="br"></div>
-        <van-button type="default" @click="downloadCodeFunc()">下载代码</van-button>
+        <PopoverCodeButton></PopoverCodeButton>
         <div class="br"></div>
         <van-button type="default" @click="clearCacheFunc()">清除缓存</van-button>
       </div>

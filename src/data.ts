@@ -372,13 +372,18 @@ class JData {
 
 
     async dbInit() {
+        // 需提供数据库命和版本
         let db = new JIndexDBEX(this.dbName, this.dbVersion)
+        // 记得设置好八本升级用的回调,版本需要整数变化才能触发
         db.onupgradeneeded = (_e, t) => {
+            // 我这边直接删除重建表,这样不要兼容
             db.deleteStore(this.dbStoreName)
             db.createStore(this.dbStoreName, { keyPath: "name" })
+            // 需要添加索引才能去查找数据
             db.getJStore(this.dbStoreName, "readwrite", t).createIndex('name', "name", { 'unique': true })
             console.log("数据库版本更新", this.dbVersion)
         }
+        // 设置回调后再初始化
         await db.init()
 
         return db

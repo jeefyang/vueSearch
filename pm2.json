@@ -1,5 +1,5 @@
 {
-    "name": "vue_search_node",
+    "name": "vue_search",
     "script": "./build_node/server.js",
     "merge_logs": false,
     "restart_delay": 7200000,

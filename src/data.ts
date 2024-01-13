@@ -31,7 +31,7 @@ class JData {
     saveKey: string = "vue_search_save"
 
     async initList() {
-        let list: { data: string[], statsList: { mtime: string, size: number }[] } = await fetch(store.serverHost + '/list').then(res => res.json())
+        let list: { data: string[], statsList: { mtime: string, size: number }[] } = await fetch('/list').then(res => res.json())
         this.fileList = list.data
         for (let i = 0; i < this.fileList.length; i++) {
             let file = this.fileList[i]
@@ -160,7 +160,7 @@ class JData {
             });
         }
         else {
-            let url = `${store.serverHost}/getfile?filename=${name}`
+            let url = `/getfile?filename=${name}`
             showToast({
                 message: `开始下载:${name}`,
                 position: 'bottom',
@@ -186,7 +186,7 @@ class JData {
     }
 
     async delFile(name: string) {
-        let url = `${store.serverHost}/delfile?filename=${name}`
+        let url = `/delfile?filename=${name}`
         showToast({
             message: `开始删除:${name}`,
             position: 'bottom',

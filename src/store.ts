@@ -1,8 +1,7 @@
 import { reactive } from "vue"
 
 export const store = reactive({
-    /** 服务路径 */
-    serverHost: <string>"",
+   
     /** 文件标签 */
     fileTagList: <string>"",
     /** 选中的文件标签 */

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 import { ref, } from "vue"
-import { store } from "../store";
 
 
 const showPopover = ref(false);
@@ -13,7 +12,7 @@ const codeList = ref(<{ url: string, fileName: string, content: string }[]>[
 for (let i = 0; i < codeList.value.length; i++) {
     let code = codeList.value[i]
     if (!code.content) {
-        let url = `${store.serverHost}${code.url}`
+        let url = `${code.url}`
         fetch(url).then(res => res.text()).then(res => {
             code.content = res
         })

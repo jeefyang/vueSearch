@@ -3,19 +3,27 @@ import fileupload from "express-fileupload"
 import cors from "cors"
 import fs from "fs"
 import path from "path"
-import { fileURLToPath } from "url"
+import mime from "mime"
+
 
 
 const app = express()
 app.use(cors())
 app.use(fileupload({ "createParentPath": true }))
-const saveDir = "./uploadFile"
-let josnUrl = "./public/config.jsonc"
-if (import.meta.env.PROD) {
-    josnUrl = path.join(path.dirname(fileURLToPath(import.meta.url)), "config.jsonc")
+let jsonUrl = "./config.jsonc"
+let exampleJsonUrl = "./config.example.jsonc"
+if (!fs.existsSync(jsonUrl)) {
+    let buf = fs.readFileSync(exampleJsonUrl)
+    fs.writeFileSync(jsonUrl, buf)
 }
-const jsonStr = fs.readFileSync(josnUrl, "utf-8")
+
+const jsonStr = fs.readFileSync(jsonUrl, "utf-8")
 const configjson: JConfigType = eval(`(${jsonStr})`)
+console.log(configjson)
+
+if (!fs.existsSync(configjson.uploadFolder)) {
+    fs.mkdirSync(configjson.uploadFolder, { "recursive": true })
+}
 
 
 /** 上传文件 */
@@ -25,10 +33,10 @@ app.post("/uploadfile", async (req, res) => {
     if (req.files) {
         let files: fileupload.FileArray = req.files
         let file: fileupload.UploadedFile = <any>files['file']
-        if (!fs.existsSync(saveDir)) {
-            fs.mkdirSync(saveDir, { recursive: true })
+        if (!fs.existsSync(configjson.uploadFolder)) {
+            fs.mkdirSync(configjson.uploadFolder, { recursive: true })
         }
-        let saveUrl = path.join(saveDir, file.name)
+        let saveUrl = path.join(configjson.uploadFolder, file.name)
         fs.writeFileSync(saveUrl, file.data)
         console.log("success")
         res.send({
@@ -48,10 +56,9 @@ app.post("/uploadfile", async (req, res) => {
 
 /** 获取文件列表 */
 app.get("/list", async (_req, res) => {
-    let files = fs.readdirSync(saveDir)
-
+    let files = fs.readdirSync(configjson.uploadFolder)
     let statsList = files.map(c => {
-        return fs.statSync(path.join(saveDir, c))
+        return fs.statSync(path.join(configjson.uploadFolder, c))
     })
     res.send({
         status: true,
@@ -79,7 +86,7 @@ app.get("/getfile", async (req, res) => {
         res.send(null)
         return
     }
-    let fileUrl = path.join(saveDir, filename)
+    let fileUrl = path.join(configjson.uploadFolder, filename)
     try {
         let file = fs.readFileSync(fileUrl)
         res.send(file)
@@ -97,7 +104,7 @@ app.get("/delfile", async (req, res) => {
         res.send(null)
         return
     }
-    let fileUrl = path.join(saveDir, filename)
+    let fileUrl = path.join(configjson.uploadFolder, filename)
     try {
         fs.rmSync(fileUrl)
         res.send(`${fileUrl} was del!!!`)
@@ -108,11 +115,31 @@ app.get("/delfile", async (req, res) => {
     }
 })
 
+app.get("*", async (req, res) => {
+
+    let url = ""
+    if (import.meta.env.MODE == "development") {
+        url = `./dev_vue${req.url}`
+    }
+    else if (import.meta.env.MODE == "production") {
+        url = `./build_vue${req.url}`
+    }
+    console.log(`加载文件:${url}`)
+    if (!fs.existsSync(url)) {
+        console.log(url, 404)
+        res.sendStatus(404)
+        return
+    }
+    res.setHeader("Content-Type", mime.getType(url))
+    res.send(fs.readFileSync(url))
+
+})
+
+// let base = import.meta.env.MODE == "development" ? "./dev_vue" : "./build_vue"
+// app.use("*", express.static(base))
 
 
-if (import.meta.env.PROD) {
-    app.listen(configjson.node_build_post)
-    console.log(configjson.node_build_host)
-}
+app.listen(configjson.listen)
+console.log(`监听启动:${configjson.listen}`)
 
 export const viteNodeApp = app;

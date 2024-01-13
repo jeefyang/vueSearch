@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { staticStore, store } from "./store"
+import { store } from "./store"
 import { jData } from './data';
 import PopoverSelectButton from './components/PopoverSelectButton.vue';
 import PopoverCodeButton from './components/PopoverCodeButton.vue';
@@ -9,29 +9,8 @@ import FileList from "./components/FileList.vue"
 
 
 onMounted(async () => {
-  const jsoncStr = await fetch("./config.jsonc").then(res => res.text())
-  const configjson: JConfigType = eval(`(${jsoncStr})`)
 
-  if (import.meta.env.DEV) {
-    store.serverHost = `http://${configjson.node_dev_domain}:${configjson.node_dev_port}`
-  }
-  else if (import.meta.env.PROD) {
-    store.serverHost = configjson.node_build_host
-  }
-  let url = new URL(document.location.href)
-  if (url.searchParams.get('nodedomain')) {
-    let host = `http${url.searchParams.get("nodessl") ? "s" : ''}://` + url.searchParams.get('nodedomain')
-    if (url.searchParams.get('nodeport')) {
-      host += `:${url.searchParams.get('nodeport')}`
-    }
-    store.serverHost = host
-  }
-  if (url.searchParams.get("path")) {
-    staticStore.path = url.searchParams.get("path")
-  }
-  if (url.searchParams.get("headname")) {
-    staticStore.headname = url.searchParams.get("headname")
-  }
+
   await jData.initList()
 
   jData.loadData()

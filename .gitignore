@@ -32,3 +32,5 @@ dev_node/
 dev_vue/
 
 config.jsonc
+
+.history

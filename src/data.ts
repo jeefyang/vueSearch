@@ -1,6 +1,6 @@
 import { JIndexDBEX } from "./indexedDBEX";
-import { staticStore, store } from "./store"
-import { showToast } from 'vant';
+import { runtimeStore, staticStore, store } from "./store"
+import { showToast, type ButtonType } from 'vant';
 
 class JData {
 
@@ -218,14 +218,19 @@ class JData {
         if (exArr.length > 0) {
             store.haveFolder = false
         }
+        console.log(fileArr)
         for (let i = 0; i < this.tagList.length; i++) {
             if (!fileArr.includes(this.tagList[i].firstTag)) {
+                runtimeStore.btnState = `${<keyof typeof store>'fileTagList'},${this.tagList[i].firstTag},${<ButtonType>'primary'}`
                 continue
             }
             if (tagArr.length > 0 && !this.tagList[i].otherTags.some(c => tagArr.some(cc => cc == c))) {
                 continue
             }
             let data = await this.getFile(this.tagList[i].fileName);
+
+            runtimeStore.btnState = `${<keyof typeof store>'fileTagList'},${this.tagList[i].firstTag},${<ButtonType>'success'}`;
+
             [{ type: "file", data: data.files }, { type: "folder", data: data.folders }].forEach(c => {
                 if (c.type == "folder" && !store.haveFolder) {
                     return

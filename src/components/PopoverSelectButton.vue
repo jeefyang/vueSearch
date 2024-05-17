@@ -1,16 +1,18 @@
 <script setup lang="ts">
 
 import { ref, defineEmits } from "vue"
-import { store } from "../store";
-import { PopoverPlacement } from "vant";
+import { store, runtimeStore } from "../store";
+import { PopoverPlacement, type ButtonType } from "vant";
 import { jData } from "../data";
+import { onMounted } from "vue";
+import { watch } from "vue";
 
-const props = defineProps<{ listTag: "fileTagList" | "otherTagList" | "videoTagList" | "musicTagList" | "officeTagList" | "zipTagList" | "picTagList" | "codeTagList" | "delFileList", selectTag: "selectFileTag" | "selectOtherTag" | "selectExTag" | "selectDelFileTag", name: string, pos: PopoverPlacement }>()
+const props = defineProps<{ listTag: "fileTagList" | "otherTagList" | "videoTagList" | "musicTagList" | "officeTagList" | "zipTagList" | "picTagList" | "codeTagList" | "delFileList", selectTag: "selectFileTag" | "selectOtherTag" | "selectExTag" | "selectDelFileTag", name: string, pos: PopoverPlacement, stateWatch?: boolean }>()
 
 const emit = defineEmits(["onclose"])
 
 
-const btnList = ref(<{ name: string, v: boolean }[]>[])
+const btnList = ref(<{ name: string, v: boolean, status?: ButtonType }[]>[])
 let list = store[props.listTag].split(',')
 let select = store[props.selectTag].split(',')
 for (let i = 0; i < list.length; i++) {
@@ -48,6 +50,23 @@ const closeDiv = () => {
     emit("onclose")
 }
 
+onMounted(() => {
+    if (props.stateWatch) {
+        watch([()=>runtimeStore.btnState], () => {
+            let s = runtimeStore.btnState
+            let l = s.split(',')
+            if (l[0] != props.listTag) {
+                return
+            }
+            let f = btnList.value.find(c => c.name == l[1])
+            if (!f) {
+                return
+            }
+            f.status = <any>l[2]
+        })
+    }
+})
+
 
 </script>
 <template>
@@ -56,7 +75,7 @@ const closeDiv = () => {
             <div class="big">
                 <div class="btn_parent tag">
                     <van-button v-for="(item, index) in btnList" :key="index" class="btn_child" :plain="!item.v"
-                        type="primary" @click="selectTag(item)">{{
+                        :type="item.status || 'primary'" @click="selectTag(item)">{{
                             item.name }}</van-button>
                 </div>
                 <div class="br"></div>

@@ -91,7 +91,7 @@ const delFileFunc = async () => {
       <Search></Search>
       <div class="br"></div>
       <div class="select">
-        <PopoverSelectButton list-tag="fileTagList" select-tag="selectFileTag" name="文件" pos="bottom">
+        <PopoverSelectButton list-tag="fileTagList" state-watch select-tag="selectFileTag" name="文件" pos="bottom">
         </PopoverSelectButton>
         <div class="br"></div>
         <PopoverSelectButton list-tag="otherTagList" select-tag="selectOtherTag" name="标签" pos="bottom">

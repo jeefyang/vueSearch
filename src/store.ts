@@ -1,7 +1,7 @@
 import { reactive } from "vue"
 
 export const store = reactive({
-   
+
     /** 文件标签 */
     fileTagList: <string>"",
     /** 选中的文件标签 */
@@ -42,6 +42,12 @@ export const store = reactive({
     sortType: <"名称" | "大小" | "路径" | "日期">"名称",
     /** 是否反序 */
     isReverseSort: <boolean>false
+})
+
+/** 运行时的store */
+export const runtimeStore = reactive({
+    /** 按钮状态 */
+    btnState: <string>""
 })
 
 export const staticStore = reactive({

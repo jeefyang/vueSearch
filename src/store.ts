@@ -16,8 +16,8 @@ export const store = reactive({
     search: <string>"",
     /** 是否正则 */
     isReg: <boolean>false,
-    /** 搜索是否包括文件夹 */
-    haveFolder: <boolean>false,
+    /** 搜索包括(文件,文件文件夹,文件夹) */
+    searchInclude:<"file"|"fileFoloder"|"folder">"file",
     /** 显示隐藏文件 */
     isDisplayHidden: <boolean>false,
     /** 可选影视后缀名 */

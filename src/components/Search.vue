@@ -11,8 +11,19 @@ const setReg = () => {
     jData.saveData()
 }
 
-const setHaveFolder = () => {
-    store.haveFolder = !store.haveFolder
+const includeList: { key: typeof store["searchInclude"], name: string }[] = [
+    { key: "file", name: "仅文件" },
+    { key: "fileFoloder", name: "文件文件夹" },
+    { key: "folder", name: "仅文件夹" }
+]
+
+const setInclude = () => {
+    let index = includeList.findIndex(c => c.key == store.searchInclude)
+    index++
+    if (index >= includeList.length) {
+        index = 0
+    }
+    store.searchInclude = includeList[index].key
     // console.log(store.haveFolder)
     jData.saveData()
 }
@@ -38,9 +49,11 @@ const setSearch = () => {
 </script>
 <template>
     <div class="big">
-        <van-button :plain="!store.isReg" type="primary" @click="setReg">正则</van-button>
+        <van-button  type="primary" @click="setInclude">{{
+            includeList[includeList.findIndex(c => c.key == store.searchInclude)].name || includeList[0].name
+        }}</van-button>
         <div class="br"></div>
-        <van-button :plain="!store.haveFolder" type="primary" @click="setHaveFolder">文件夹</van-button>
+        <van-button :plain="!store.isReg" type="primary" @click="setReg">正则</van-button>
         <div class="br"></div>
         <van-button :plain="!store.isDisplayHidden" type="primary" @click="setDisplayHidden">隐藏</van-button>
         <div class="br"></div>

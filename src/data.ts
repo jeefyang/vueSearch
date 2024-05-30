@@ -216,7 +216,7 @@ class JData {
         let exArr = !store.selectExTag ? [] : store.selectExTag.split(",")
         // 强制
         if (exArr.length > 0) {
-            store.haveFolder = false
+            store.searchInclude = "file"
         }
         console.log(fileArr)
         for (let i = 0; i < this.tagList.length; i++) {
@@ -231,8 +231,11 @@ class JData {
 
             runtimeStore.btnState = `${<keyof typeof store>'fileTagList'},${this.tagList[i].firstTag},${<ButtonType>'success'}`;
 
-            [{ type: "file", data: data.files }, { type: "folder", data: data.folders }].forEach(c => {
-                if (c.type == "folder" && !store.haveFolder) {
+            [{ type: <"file" | "folder">"file", data: data.files }, { type: <"file" | "folder">"folder", data: data.folders }].forEach(c => {
+                if (c.type == "folder" && store.searchInclude == "file") {
+                    return
+                }
+                else if (c.type == "file" && store.searchInclude == "folder") {
                     return
                 }
                 for (let i = 0; i < c.data.length; i++) {

@@ -9,7 +9,7 @@ const divRef = ref(<HTMLDivElement>null)
 
 onMounted(async () => {
     // let time: NodeJS.Timeout
-    watch([() => store.search, () => store.isReg, () => store.haveFolder, () => store.isDisplayHidden, () => store.selectFileTag, () => store.selectOtherTag, () => store.selectExTag, () => store.sortType, () => store.isReverseSort, () => staticStore.path, () => staticStore.headname], () => {
+    watch([() => store.search, () => store.isReg, () => store.searchInclude, () => store.isDisplayHidden, () => store.selectFileTag, () => store.selectOtherTag, () => store.selectExTag, () => store.sortType, () => store.isReverseSort, () => staticStore.path, () => staticStore.headname], () => {
         // if (time) {
         //     clearTimeout(time)
         // }
@@ -153,14 +153,14 @@ const searchNameFunc = (name: string, p: -1 | 0 | 1) => {
             <tbody>
                 <tr v-for="(item, index) in fileList" :key="index">
                     <td :class="item.type == 'folder' ? 'folderColor' : 'fileColor'"
-                        @dblclick="setPathFunc(item, item.name)">
+                        @dblclick="setPathFunc(item, item.name)" :title="item.headname+':'+item.path">
                         <p>{{ searchNameFunc(item.name, -1) }}</p>
                         <p class="searchHigh">{{ searchNameFunc(item.name, 0) }}</p>
                         <p>{{ searchNameFunc(item.name, 1) }}</p>
                     </td>
                     <td :class="item.type == 'folder' ? 'folderColor' : 'fileColor'">{{ getsize(item.size) }}</td>
                     <td :class="item.type == 'folder' ? 'folderColor' : 'fileColor'">{{ gettime(item.atime) }}</td>
-                    <td @dblclick="setPathFunc(item)">
+                    <td @dblclick="setPathFunc(item)" :title="item.name">
                         <p class="headnameColor">{{ item.headname }}:</p>
                         <p>{{ item.path }}</p>
                     </td>

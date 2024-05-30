@@ -9,7 +9,7 @@ const divRef = ref(<HTMLDivElement>null)
 
 onMounted(async () => {
     // let time: NodeJS.Timeout
-    watch([() => store.search, () => store.isReg, () => store.searchInclude, () => store.isDisplayHidden, () => store.selectFileTag, () => store.selectOtherTag, () => store.selectExTag, () => store.sortType, () => store.isReverseSort, () => staticStore.path, () => staticStore.headname], () => {
+    watch([() => store.search, () => store.isReg, () => store.searchInclude, () => store.isDisplayHidden, () => store.selectFileTag, () => store.selectOtherTag, () => store.selectExTag, () => store.sortType, () => store.isReverseSort, () => staticStore.path, () => staticStore.headname, () => store.isCur], () => {
         // if (time) {
         //     clearTimeout(time)
         // }
@@ -153,7 +153,7 @@ const searchNameFunc = (name: string, p: -1 | 0 | 1) => {
             <tbody>
                 <tr v-for="(item, index) in fileList" :key="index">
                     <td :class="item.type == 'folder' ? 'folderColor' : 'fileColor'"
-                        @dblclick="setPathFunc(item, item.name)" :title="item.headname+':'+item.path">
+                        @dblclick="setPathFunc(item, item.name)" :title="item.headname + ':' + item.path">
                         <p>{{ searchNameFunc(item.name, -1) }}</p>
                         <p class="searchHigh">{{ searchNameFunc(item.name, 0) }}</p>
                         <p>{{ searchNameFunc(item.name, 1) }}</p>
@@ -174,7 +174,7 @@ const searchNameFunc = (name: string, p: -1 | 0 | 1) => {
 <style scoped>
 .styled-table {
     border-collapse: collapse;
-    margin: 25px 0;
+  
     font-size: 0.9em;
     font-family: sans-serif;
     min-width: 400px;
@@ -258,5 +258,6 @@ tr:hover .searchHigh {
 .fileList {
     flex-grow: 1;
     overflow: auto;
+    margin: 15px 0;
 }
 </style>

@@ -36,6 +36,17 @@ onMounted(async () => {
 
 })
 
+const readPathFunc = () => {
+  let o = new URL(location.href)
+  let headname = o.searchParams.get("headname")
+  if (headname) {
+    jData.setHeadname(headname)
+  }
+  let path = o.searchParams.get('path')
+  if (path) {
+    jData.setPath(path)
+  }
+}
 
 const clearPathFunc = () => {
   jData.setHeadname("")
@@ -45,6 +56,11 @@ const clearPathFunc = () => {
 const rebackPathFunc = () => {
   jData.rebackPath()
 }
+
+const clearChildPathFunc = () => {
+  jData.setPath("")
+}
+
 
 const clearCacheFunc = async () => {
   localStorage.clear()
@@ -118,6 +134,11 @@ const delFileFunc = async () => {
         <PopoverSelectButton list-tag="delFileList" select-tag="selectDelFileTag" name="删除" pos="bottom"
           @onclose="delFileFunc">
         </PopoverSelectButton>
+        </div>
+        <div class="select">
+        <van-button type="default" @click="readPathFunc()">读取路径</van-button>
+        <div class="br"></div>
+        <van-button type="default" @click="clearChildPathFunc()">清子路径</van-button>
         <div class="br"></div>
         <van-button type="default" @click="clearPathFunc()">重置路径</van-button>
         <div class="br"></div>
@@ -167,6 +188,8 @@ const delFileFunc = async () => {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  margin-top: 10px;
+
   /* justify-content: space-around; */
 }
 

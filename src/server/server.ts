@@ -119,10 +119,10 @@ app.get("*", async (req, res) => {
 
     let url = ""
     if (import.meta.env.MODE == "development") {
-        url = `./dev_vue${req.url}`
+        url = `./dev_vue${req.path}`
     }
     else if (import.meta.env.MODE == "production") {
-        url = `./build_vue${req.url}`
+        url = `./build_vue${req.path}`
     }
     console.log(`加载文件:${url}`)
     if (!fs.existsSync(url)) {

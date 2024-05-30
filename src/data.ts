@@ -219,6 +219,7 @@ class JData {
             store.searchInclude = "file"
         }
         console.log(fileArr)
+        console.log(staticStore.path)
         for (let i = 0; i < this.tagList.length; i++) {
             if (!fileArr.includes(this.tagList[i].firstTag)) {
                 runtimeStore.btnState = `${<keyof typeof store>'fileTagList'},${this.tagList[i].firstTag},${<ButtonType>'primary'}`
@@ -249,6 +250,9 @@ class JData {
                         continue
                     }
                     if (staticStore.path && c.data[i].path.slice(0, staticStore.path.length) != staticStore.path) {
+                        continue
+                    }
+                    if (store.isCur && c.data[i].path != staticStore.path) {
                         continue
                     }
                     this.conditionList.push(c.data[i])

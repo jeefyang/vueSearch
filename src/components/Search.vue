@@ -11,6 +11,11 @@ const setReg = () => {
     jData.saveData()
 }
 
+const setCur = () => {
+    store.isCur = !store.isCur
+    jData.saveData()
+}
+
 const includeList: { key: typeof store["searchInclude"], name: string }[] = [
     { key: "file", name: "仅文件" },
     { key: "fileFoloder", name: "文件文件夹" },
@@ -49,9 +54,11 @@ const setSearch = () => {
 </script>
 <template>
     <div class="big">
-        <van-button  type="primary" @click="setInclude">{{
-            includeList[includeList.findIndex(c => c.key == store.searchInclude)].name || includeList[0].name
+        <van-button type="primary" @click="setInclude">{{
+            includeList[includeList.findIndex(c => c.key == store.searchInclude)]?.name || includeList[0].name
         }}</van-button>
+        <div class="br"></div>
+        <van-button :plain="!store.isCur" type="primary" @click="setCur">当前</van-button>
         <div class="br"></div>
         <van-button :plain="!store.isReg" type="primary" @click="setReg">正则</van-button>
         <div class="br"></div>

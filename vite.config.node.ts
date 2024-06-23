@@ -18,3 +18,6 @@ export default defineConfig({
         }),
     ]
 })
+
+
+const xx=1+1

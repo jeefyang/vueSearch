@@ -11,6 +11,7 @@
     "dev:server": "ts-node --project tsconfig.server.json  ./server.ts",
     "build": "vue-tsc && vite build",
     "build:all": "vue-tsc && vite build -c vite.config.node.ts --outDir build_node && vite build -c vite.config.vue.ts --outDir build_vue",
+    "build:getFileTool":"vue-tsc && vite build -c vite.config.getfileTool.ts --outDir getfileTool",
     "preview": "vite preview"
   },
   "dependencies": {

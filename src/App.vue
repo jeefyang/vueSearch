@@ -23,7 +23,7 @@ onMounted(async () => {
   store.officeTagList = "xls,ppt,doc,docx,txt"
   store.picTagList = "bmp,png,jpg,jpeg,webp,anpg"
   store.codeTagList = "js,ts,py,html"
-  store.delFileList = jData.tagList.map(c => c.fileName).join(',')
+  store.delFileList = jData.getFileTool.tagList.map(c => c.fileName).join(',')
   store.selectDelFileTag = ""
 
 
@@ -64,7 +64,7 @@ const clearChildPathFunc = () => {
 
 const clearCacheFunc = async () => {
   localStorage.clear()
-  await jData.clearDB()
+  await jData.getFileTool.clearDB()
   let check = window.confirm("是否刷新?")
   if (check) {
     window.location.reload()
@@ -134,8 +134,8 @@ const delFileFunc = async () => {
         <PopoverSelectButton list-tag="delFileList" select-tag="selectDelFileTag" name="删除" pos="bottom"
           @onclose="delFileFunc">
         </PopoverSelectButton>
-        </div>
-        <div class="select">
+      </div>
+      <div class="select">
         <van-button type="default" @click="readPathFunc()">读取路径</van-button>
         <div class="br"></div>
         <van-button type="default" @click="clearChildPathFunc()">清子路径</van-button>

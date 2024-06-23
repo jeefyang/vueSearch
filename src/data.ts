@@ -1,21 +1,11 @@
-import { JIndexDBEX } from "./indexedDBEX";
+
+import { JGetFileTool } from "./getFileTool";
 import { runtimeStore, staticStore, store } from "./store"
 import { showToast, type ButtonType } from 'vant';
 
 class JData {
 
-    cacheList: {
-        files: JFileType[],
-        folders: JFileType[]
-        name: string,
-        baseDir: string
-    }[] = []
-
-    dbVersion: number = 2
-    dbName: string = "fileDB"
-    dbStoreName: string = "fileList"
-
-    tagList: JDataTagType[] = []
+    getFileTool = new JGetFileTool('')
 
     fileList: string[] = []
     /** 条件列表 */
@@ -37,7 +27,7 @@ class JData {
             let file = this.fileList[i]
             let name = file.split(".")[0].split(".")[0]
             let tag = name.split("_")
-            this.tagList.push({
+            this.getFileTool.tagList.push({
                 name: name,
                 tags: tag,
                 firstTag: tag[0],
@@ -74,136 +64,77 @@ class JData {
     }
 
     getFileTags() {
-        return jData.tagList.map(c => c.firstTag).join(',')
+        return this.getFileTool.tagList.map(c => c.firstTag).join(',')
     }
 
     getOtherTags() {
         let list: string[] = []
-        for (let i = 0; i < jData.tagList.length; i++) {
-            list.push(...jData.tagList[i].otherTags)
+        for (let i = 0; i < this.getFileTool.tagList.length; i++) {
+            list.push(... this.getFileTool.tagList[i].otherTags)
         }
         return list.join(',')
     }
 
-    decodeFile(str: string, name: string) {
-        let cache: (typeof this.cacheList)[number] = {
-            files: [],
-            folders: [],
-            name: name.split(".")[0],
-            baseDir: ""
-        }
-        let start = 1
-        let end = 2
-        while (str[end] != "?") {
-            end++
-        }
-        cache.baseDir = str.slice(start, end)
-        start = end + 1
-        let arr: string[] = []
-        for (let i = start; i < str.length; i++) {
-            if (str[i] == "*") {
-                arr.push(str.slice(start, i))
-                start = i + 1
-                continue
-            }
-            if (str[i] == "|") {
-                arr.push(str.slice(start, i))
-                let pathUrl = arr[1]
-                let arrpath = pathUrl.split(/\\|\//)
-                let basePathArr = arrpath.slice(0, arrpath.length - 1)
-                let isHideFolder = basePathArr.some(c => c[0] == "." && c.length > 1)
-                let basePath = basePathArr.join('/')
-                let fileName = arrpath[arrpath.length - 1]
-                let file: JFileType = {
-                    headname: cache.name.split("_")[0],
-                    path: basePath,
-                    size: Number(arr[2]),
-                    atime: Number(arr[3]) * 1000,
-                    ctime: Number(arr[4]) * 1000,
-                    mtime: Number(arr[5]) * 1000,
-                    name: fileName,
-                    type: "file",
-                    isHideFolder: isHideFolder,
-                    isHideFile: fileName[0] == "."
-                }
-                if (arr[0] == "0") {
-                    file.type = "folder"
-                    cache.folders.push(file)
-                }
-                else if (arr[0] == "1") {
-                    let arr = file.name.split('.')
-                    file.ex = arr[arr.length - 1]
-                    cache.files.push(file)
-                }
-                start = i + 1
-                arr = []
-                continue
-            }
-        }
-        return cache
-    }
-
     async getFile(name: string) {
-        let index = this.cacheList.findIndex(c => c.name == name.split('.')[0])
-        if (index != -1) {
-            return this.cacheList[index]
-        }
-        let fileContent: string
-        let tag = this.tagList.find(c => c.fileName == name)
-        let dbData = await this.getFileByDB(name)
-        if (dbData && tag.mtime == dbData.mtime && tag.size == dbData.size) {
-            fileContent = dbData.content
-            showToast({
-                message: `直接读取数据库:${name}`,
-                position: 'bottom',
-                duration: 2000
-            });
-        }
-        else {
-            let url = `/getfile?filename=${name}`
-            showToast({
-                message: `开始下载:${name}`,
-                position: 'bottom',
-                duration: 2000
-            });
 
-            fileContent = await fetch(url).then(res => res.text())
-            showToast({
-                message: `下载完成:${name}`,
-                position: 'bottom',
-                duration: 2000
-            });
-            await this.updateFileDB(tag, fileContent)
-            showToast({
-                message: `更新数据库完成:${name}`,
-                position: 'bottom',
-                duration: 2000
-            });
-        }
-        let cache = this.decodeFile(fileContent, name)
-        this.cacheList.push(cache)
+        let cache = await this.getFileTool.getFile(name,
+            () => {
+
+            },
+            () => {
+                showToast({
+                    message: `直接读取数据库:${name}`,
+                    position: 'bottom',
+                    duration: 2000
+                });
+            },
+            () => {
+                showToast({
+                    message: `开始下载:${name}`,
+                    position: 'bottom',
+                    duration: 2000
+                });
+            },
+            () => {
+                showToast({
+                    message: `下载完成:${name}`,
+                    position: 'bottom',
+                    duration: 2000
+                });
+            },
+            () => {
+                showToast({
+                    message: `更新数据库完成:${name}`,
+                    position: 'bottom',
+                    duration: 2000
+                });
+            }
+        )
+
         return cache
     }
 
     async delFile(name: string) {
-        let url = `/delfile?filename=${name}`
-        showToast({
-            message: `开始删除:${name}`,
-            position: 'bottom',
-            duration: 2000
-        });
-        let stat = await fetch(url)
-        console.log(stat)
-        showToast({
-            message: `删除完成:${name}`,
-            position: 'bottom',
-            duration: 2000
-        });
-        return
+        return await this.getFileTool.delFile(name,
+            () => {
+                showToast({
+                    message: `开始删除:${name}`,
+                    position: 'bottom',
+                    duration: 2000
+                });
+            },
+            () => {
+                showToast({
+                    message: `删除完成:${name}`,
+                    position: 'bottom',
+                    duration: 2000
+                });
+            }
+        )
     }
 
     async getFileList() {
-        let data = await this.getFile(this.tagList[0].name)
+        let data = await this.getFile(this.getFileTool.tagList[0].name)
         let list: JFileType[] = [...data.files.filter(c => !c.isHideFile && !c.isHideFolder)]
         return list
     }
@@ -220,17 +151,17 @@ class JData {
         }
         console.log(fileArr)
         console.log(staticStore.path)
-        for (let i = 0; i < this.tagList.length; i++) {
-            if (!fileArr.includes(this.tagList[i].firstTag)) {
-                runtimeStore.btnState = `${<keyof typeof store>'fileTagList'},${this.tagList[i].firstTag},${<ButtonType>'primary'}`
+        for (let i = 0; i < this.getFileTool.tagList.length; i++) {
+            if (!fileArr.includes(this.getFileTool.tagList[i].firstTag)) {
+                runtimeStore.btnState = `${<keyof typeof store>'fileTagList'},${this.getFileTool.tagList[i].firstTag},${<ButtonType>'primary'}`
                 continue
             }
-            if (tagArr.length > 0 && !this.tagList[i].otherTags.some(c => tagArr.some(cc => cc == c))) {
+            if (tagArr.length > 0 && !this.getFileTool.tagList[i].otherTags.some(c => tagArr.some(cc => cc == c))) {
                 continue
             }
-            let data = await this.getFile(this.tagList[i].fileName);
+            let data = await this.getFile(this.getFileTool.tagList[i].fileName);
 
-            runtimeStore.btnState = `${<keyof typeof store>'fileTagList'},${this.tagList[i].firstTag},${<ButtonType>'success'}`;
+            runtimeStore.btnState = `${<keyof typeof store>'fileTagList'},${this.getFileTool.tagList[i].firstTag},${<ButtonType>'success'}`;
 
             [{ type: <"file" | "folder">"file", data: data.files }, { type: <"file" | "folder">"folder", data: data.folders }].forEach(c => {
                 if (c.type == "folder" && store.searchInclude == "file") {
@@ -381,57 +312,6 @@ class JData {
         let newPath = arrpath.join('/')
         this.setPath(newPath)
     }
-
-
-    async dbInit() {
-        // 需提供数据库命和版本
-        let db = new JIndexDBEX(this.dbName, this.dbVersion)
-        // 记得设置好八本升级用的回调,版本需要整数变化才能触发
-        db.onupgradeneeded = (_e, t) => {
-            // 我这边直接删除重建表,这样不要兼容
-            db.deleteStore(this.dbStoreName)
-            db.createStore(this.dbStoreName, { keyPath: "name" })
-            // 需要添加索引才能去查找数据
-            db.getJStore(this.dbStoreName, "readwrite", t).createIndex('name', "name", { 'unique': true })
-            console.log("数据库版本更新", this.dbVersion)
-        }
-        // 设置回调后再初始化
-        await db.init()
-
-        return db
-    }
-
-    async getFileByDB(name: string) {
-        let db = await this.dbInit()
-        let s = db.getJStore<fileDBType>('fileList', "readonly")
-        try {
-            let data = await s.find(name, "name")
-            db.base.close()
-            return data
-        }
-        catch {
-            db.base.close()
-            return undefined
-        }
-        return
-    }
-
-    async updateFileDB(data: JDataTagType, content: string) {
-        let db = await this.dbInit()
-        db.createStore(this.dbStoreName, { keyPath: "name" })
-        let s = db.getJStore<fileDBType>(this.dbStoreName, "readwrite")
-        await s.modify({ name: data.fileName, mtime: data.mtime, size: data.size, content })
-        db.base.close()
-    }
-
-    async clearDB() {
-        let db = new JIndexDBEX("fileDB", this.dbVersion)
-        await db.init()
-        await db.deleteDB()
-        db.base.close()
-        return
-    }
-
 
 }
 

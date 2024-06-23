@@ -34,3 +34,6 @@ dev_vue/
 config.jsonc
 
 .history
+
+test*
+getfileTool

@@ -67,12 +67,13 @@ app.get("/list", async (_req, res) => {
     })
 })
 
-/** 下载代码 */
+/** 下载py代码 */
 app.get("/downloadcodepy", async (_req, res) => {
     let code = fs.readFileSync('./upload.py')
     res.send(code)
 })
 
+/** 下载批处理文件 */
 app.get("/downloadcodebat", async (_req, res) => {
     let code = fs.readFileSync('./upload.bat')
     res.send(code)
@@ -97,6 +98,7 @@ app.get("/getfile", async (req, res) => {
     }
 })
 
+/** 删除文件 */
 app.get("/delfile", async (req, res) => {
     let filename = <string>req?.query?.filename
     if (!filename) {

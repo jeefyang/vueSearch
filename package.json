@@ -9,9 +9,9 @@
     "dev:node": "vite build -w -c vite.config.node.ts --mode development --outDir ./dev_node",
     "dev:run": "node --watch ./dev_node/server.js",
     "dev:server": "ts-node --project tsconfig.server.json  ./server.ts",
-    "build": "vue-tsc && vite build",
-    "build:all": "vue-tsc && vite build -c vite.config.node.ts --outDir build_node && vite build -c vite.config.vue.ts --outDir build_vue",
-    "build:getFileTool": "vue-tsc && vite build -c vite.config.getfileTool.ts --outDir getfileTool",
+    "build": "vite build",
+    "build:all": "vite build -c vite.config.node.ts --outDir build_node && vite build -c vite.config.vue.ts --outDir build_vue",
+    "build:getFileTool": "vite build -c vite.config.getfileTool.ts --outDir getfileTool",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -28,7 +28,7 @@
     "mime": "^4.0.1",
     "multer": "^1.4.5-lts.1",
     "vant": "^4.6.5",
-    "vue": "^3.3.4",
+    "vue": "^3.4.29",
     "vxe-table": "next",
     "xe-utils": "^3.5.11",
     "zod": "^3.21.4"
@@ -39,11 +39,10 @@
     "@types/express": "^4.17.17",
     "@types/mime": "^3.0.4",
     "@types/multer": "^1.4.7",
-    "@vitejs/plugin-vue": "^4.2.3",
     "http-proxy-middleware": "^3.0.0",
     "typescript": "^5.0.2",
-    "vite": "^4.4.7",
     "vite-plugin-node": "^3.0.2",
-    "vue-tsc": "^1.8.5"
+    "@vitejs/plugin-vue": "^5.0.5",
+    "vite": "^5.3.1"
   }
 }

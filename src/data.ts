@@ -21,22 +21,8 @@ class JData {
     saveKey: string = "vue_search_save"
 
     async initList() {
-        let list: { data: string[], statsList: { mtime: string, size: number }[] } = await fetch('/list').then(res => res.json())
+        let list = await this.getFileTool.getFileList()
         this.fileList = list.data
-        for (let i = 0; i < this.fileList.length; i++) {
-            let file = this.fileList[i]
-            let name = file.split(".")[0].split(".")[0]
-            let tag = name.split("_")
-            this.getFileTool.tagList.push({
-                name: name,
-                tags: tag,
-                firstTag: tag[0],
-                otherTags: tag.slice(1),
-                fileName: file,
-                mtime: list?.statsList?.[i]?.mtime || "",
-                size: list?.statsList?.[i]?.size || 0
-            })
-        }
     }
     /** 保存数据 */
     saveData() {

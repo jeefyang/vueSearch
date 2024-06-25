@@ -3,7 +3,12 @@ type JConfigType = {
     listen: number
     /** 上传的文件夹 */
     uploadFolder: string
-
+    /** https监听端口 */
+    httpsListen?: number
+    /** https密钥路径 */
+    httpsKeyUrl?: string
+    /** https证书路径 */
+    httpsCrtUrl?: string
 }
 
 type JFileType = {

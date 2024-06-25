@@ -7,7 +7,7 @@ export default defineConfig({
     build: {
         lib: {
             entry: "./src/getFileTool.ts",
-            name: "getfileTool",
+            name: "JGetfileTool",
             fileName: "getfileTool",
             formats:['iife']
         },

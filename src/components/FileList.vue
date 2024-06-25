@@ -132,6 +132,8 @@ const searchNameFunc = (name: string, p: -1 | 0 | 1) => {
     }
 }
 
+const isReverseColor = "#491089"
+const noReverseColor = '#8a2527'
 
 
 </script>
@@ -140,13 +142,13 @@ const searchNameFunc = (name: string, p: -1 | 0 | 1) => {
         <table class="styled-table">
             <thead>
                 <tr>
-                    <th :style="{ 'background-color': store.sortType == '名称' ? (store.isReverseSort ? '#a566ed' : '#d35c5e') : undefined }"
+                    <th :style="{ 'background-color': store.sortType == '名称' ? (store.isReverseSort ? isReverseColor : noReverseColor) : undefined }"
                         @click="setSortType('名称')">name</th>
-                    <th :style="{ 'background-color': store.sortType == '大小' ? (store.isReverseSort ? '#a566ed' : '#d35c5e') : undefined }"
+                    <th :style="{ 'background-color': store.sortType == '大小' ? (store.isReverseSort ? isReverseColor : noReverseColor) : undefined }"
                         @click="setSortType('大小')">size</th>
-                    <th :style="{ 'background-color': store.sortType == '日期' ? (store.isReverseSort ? '#a566ed' : '#d35c5e') : undefined }"
+                    <th :style="{ 'background-color': store.sortType == '日期' ? (store.isReverseSort ? isReverseColor : noReverseColor) : undefined }"
                         @click="setSortType('日期')">date</th>
-                    <th :style="{ 'background-color': store.sortType == '路径' ? (store.isReverseSort ? '#a566ed' : '#d35c5e') : undefined }"
+                    <th :style="{ 'background-color': store.sortType == '路径' ? (store.isReverseSort ? isReverseColor : noReverseColor) : undefined }"
                         @click="setSortType('路径')">path</th>
                 </tr>
             </thead>
@@ -174,7 +176,7 @@ const searchNameFunc = (name: string, p: -1 | 0 | 1) => {
 <style scoped>
 .styled-table {
     border-collapse: collapse;
-  
+
     font-size: 0.9em;
     font-family: sans-serif;
     min-width: 400px;
@@ -225,18 +227,18 @@ tr:hover .searchHigh {
 }
 
 .styled-table tbody tr:hover td .headnameColor {
-    color: #b22135;
+    color: #95302f;
 }
 
 
 .styled-table tbody tr {
-    background-color: #5ba350;
+    background-color: #498240;
     font-weight: bold;
     color: #ffffff;
 }
 
 .styled-table tbody tr:nth-of-type(even) {
-    background-color: #4889f8;
+    background-color: #063f9f;
     font-weight: bold;
     color: #ffffff;
 }

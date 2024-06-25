@@ -4,7 +4,7 @@ import App from './App.vue'
 import { Popover, Button, Checkbox, CheckboxGroup, Field, Popup, ConfigProvider, Toast } from 'vant';
 import "vant/lib/index.css"
 import "vxe-table/lib/style.css"
-import VxeTable from 'vxe-table';
+// import VxeTable from 'vxe-table';
 
 
 export const createApp = () => {
@@ -17,7 +17,7 @@ export const createApp = () => {
     app.use(Popup)
     app.use(ConfigProvider)
     app.use(Toast)
-    app.use(VxeTable)
+    // app.use(VxeTable)
     return { app }
 }
 

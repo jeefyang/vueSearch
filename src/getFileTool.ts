@@ -21,12 +21,34 @@ export class JGetFileTool {
 
     }
 
+    async getFileList() {
+        let list: { data: string[], statsList: { mtime: string, size: number }[] } = await fetch(this.baseUrl + '/list').then(res => res.json())
+        for (let i = 0; i < list.data.length; i++) {
+            let file = list.data[i]
+            let name = file.split(".")[0].split(".")[0]
+            let tag = name.split("_")
+            this.tagList.push({
+                name: name,
+                tags: tag,
+                firstTag: tag[0],
+                otherTags: tag.slice(1),
+                fileName: file,
+                mtime: list?.statsList?.[i]?.mtime || "",
+                size: list?.statsList?.[i]?.size || 0
+            })
+        }
+        return list
+    }
+
     decodeFile(str: string, name: string) {
-        let cache: (typeof this.cacheList)[number] = {
+        let cache: CacheType = {
             files: [],
             folders: [],
             name: name.split(".")[0],
             baseDir: ""
+        }
+        if (!str) {
+            return cache
         }
         let start = 1
         let end = 2

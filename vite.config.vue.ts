@@ -8,7 +8,7 @@ export default defineConfig((command) => {
         // 原始
         plugins: [vue()],
         build: {
-            minify: command.mode == "development" ? false : true
+            minify: command.mode == "development" ? false : true,
         }
     }
 

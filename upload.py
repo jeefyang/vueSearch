@@ -9,24 +9,26 @@ from pathlib import Path
 import re
 import fnmatch
 
-big_data: list[str] = [""]
+
 ignore_data: list[str] = []
-basedir = "./"
 
 
 def main(argv):
     global ignore_data
-    global basedir
 
+    basedir = "./"
     http_url = "http://localhost:3008/uploadfile"
 
     outfile = "index.txt"
     ignorefile = ""
+    argliststr: str = ""
 
     opts, args = getopt.getopt(
-        argv, "", ['basedir=', 'outfile=', "httpurl=", "ignorefile="])
+        argv, "", ['basedir=', 'outfile=', "httpurl=", "ignorefile=", 'arglist='])
     for opt, arg in opts:
-        if opt in ("--basedir"):
+        if opt in ("--arglist"):
+            argliststr = arg
+        elif opt in ("--basedir"):
             basedir = arg
         elif opt in ("--outfile"):
             outfile = arg
@@ -35,22 +37,39 @@ def main(argv):
         elif opt in ("--ignorefile"):
             ignorefile = arg
 
+    print("忽略文件:"+ignorefile)
+
+    if ignorefile is not "":
+        with open(ignorefile, "r", encoding="utf-8")as f:
+            ignore_data = f.read().splitlines()
+            
+
+    if argliststr is not "" :
+        arglist=argliststr.split(',')
+        for i in range(0,len(arglist),2):
+            once_main(http_url,arglist[i],arglist[i+1])
+            pass
+    else:
+        once_main(http_url, basedir, outfile)
+    pass
+
+
+def once_main(http_url: str, basedir: str, outfile: str):
+
+    print("基础路径:"+basedir)
+    print("上传路径:"+http_url)
+    print("输出文件名:"+outfile)
+
+    big_data: list[str] = [""]
     big_data[0] += "?"+basedir+"?"
 
-    print(basedir)
-    print(http_url)
-    print(outfile)
-    print(ignorefile)
-
-    with open(os.path.join(basedir, ignorefile), "r", encoding="utf-8")as f:
-        ignore_data = f.read().splitlines()
-
-    loopFile(basedir)
+    loopFile(big_data, basedir)
     with open(os.path.join(basedir, outfile), "w", encoding="utf-8")as file:
         file.write(big_data[0])
         file.close()
 
     post_data(http_url, os.path.join(basedir, outfile))
+    pass
 
 
 def post_data(http_url: str, file_url: str):
@@ -68,7 +87,7 @@ def check_ignore(n: str):
     return False
 
 
-def loopFile(dir: str, relate_dir: str = ""):
+def loopFile(big_data: list[str], dir: str, relate_dir: str = ""):
     print("正在遍历:", dir)
     filesys = os.scandir(dir)
 
@@ -94,7 +113,7 @@ def loopFile(dir: str, relate_dir: str = ""):
         if file_msg != "":
             big_data[0] += file_msg
         if entry.is_dir() is True:
-            loopFile(new_url, relate_url)
+            loopFile(big_data, new_url, relate_url)
             pass
     filesys.close()
     return

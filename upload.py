@@ -5,12 +5,65 @@ import stat
 import json
 import sys
 import getopt
-from pathlib import Path
+from pathlib import Path,PurePath
 import re
-import fnmatch
+# import fnmatch
 
 
-ignore_data: list[str] = []
+ignore_data=None
+
+class GitIgnoreMatcher:
+    def __init__(self, gitignore_rules:str):
+        self.patterns = []
+        for line in gitignore_rules.split('\n'):
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue  # 忽略空行和注释
+            negation = line.startswith('!')
+            if negation:
+                line = line[1:]
+            pattern = self._convert_pattern(line)
+            self.patterns.append((pattern, negation))
+        
+    def _convert_pattern(self, pattern:str):
+        # 处理路径分隔符（统一转换为POSIX风格）
+        pattern = pattern.replace(os.sep, '/')
+        
+        # 处理特殊字符
+        pattern = re.escape(pattern)
+        pattern = pattern.replace(r'\*\*', r'.*')    # **匹配任意多级目录
+        pattern = pattern.replace(r'\*', r'[^/]*')   # *匹配非分隔符的任意字符
+        pattern = pattern.replace(r'\?', r'[^/]')    # ?匹配单个非分隔符字符
+        pattern = pattern.replace(r'\]', r']')       # 还原字符组
+        pattern = pattern.replace(r'\[', r'[')
+        pattern = pattern.replace(r'\!', r'!')
+        
+        # 处理目录匹配
+        dir_only = pattern.endswith(r'\/')
+        if dir_only:
+            pattern = pattern[:-2] + '(?:/.*)?$'
+        
+        # 处理绝对路径匹配
+        if pattern.startswith(r'\/'):
+            pattern = '^' + pattern[2:] + '(?:/.*)?$'
+        else:
+            pattern = '(^|/)' + pattern + '(?:/.*)?$'
+            
+        return re.compile(pattern)
+    
+    def is_ignored(self, file_path):
+        # 统一转换为POSIX风格路径
+        path = PurePath(file_path).as_posix().lstrip('/')
+        
+        # 特殊处理根目录
+        if not path:
+            return False
+        
+        ignore = False
+        for pattern, negation in self.patterns:
+            if pattern.search(path):
+                ignore = not negation
+        return ignore
 
 
 def main(argv):
@@ -36,15 +89,15 @@ def main(argv):
             http_url = arg
         elif opt in ("--ignorefile"):
             ignorefile = arg
-
+            
     print("忽略文件:"+ignorefile)
 
-    if ignorefile is not "":
+    if ignorefile != "":
         with open(ignorefile, "r", encoding="utf-8")as f:
-            ignore_data = f.read().splitlines()
+            ignore_data = GitIgnoreMatcher(f.read())
             
 
-    if argliststr is not "" :
+    if argliststr != "" :
         arglist=argliststr.split(',')
         for i in range(0,len(arglist),2):
             once_main(http_url,arglist[i],arglist[i+1])
@@ -80,11 +133,14 @@ def post_data(http_url: str, file_url: str):
 
 
 def check_ignore(n: str):
-
-    for k in ignore_data:
-        if fnmatch.fnmatch(n, k):
-            return True
-    return False
+    
+    # for k in ignore_data:
+    #     if fnmatch.fnmatch(n, k):
+    #         return True
+    # return False
+    if ignore_data==None:
+        return False
+    return ignore_data.is_ignored(n)
 
 
 def loopFile(big_data: list[str], dir: str, relate_dir: str = ""):
@@ -94,7 +150,9 @@ def loopFile(big_data: list[str], dir: str, relate_dir: str = ""):
     for entry in filesys:
         new_url = entry.path
         relate_url = os.path.join(relate_dir, entry.name)
+        print(relate_url,check_ignore(relate_url))
         if check_ignore(relate_url):
+
             continue
         # s=os.stat(new_url)
         s = Path.stat(Path(new_url))
@@ -122,3 +180,4 @@ def loopFile(big_data: list[str], dir: str, relate_dir: str = ""):
 if __name__ == "__main__":
     main(sys.argv[1:])
     print('打完收工')
+    # os.system("pause")

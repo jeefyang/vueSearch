@@ -150,7 +150,6 @@ def loopFile(big_data: list[str], dir: str, relate_dir: str = ""):
     for entry in filesys:
         new_url = entry.path
         relate_url = os.path.join(relate_dir, entry.name)
-        print(relate_url,check_ignore(relate_url))
         if check_ignore(relate_url):
 
             continue

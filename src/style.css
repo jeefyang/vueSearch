@@ -71,9 +71,22 @@ button:focus-visible {
 }
 
 #app {
-  padding: 1.5%;
-  width: 97%;
-  height: 97%;
+  padding: 10px;
+  width: calc(100vw - 20px);
+  height: calc(100vh - 20px);
+
+
+}
+
+.line {
+  display: flex;
+  overflow: auto;
+  white-space: nowrap;
+  margin-bottom: 10px;
+}
+
+.interval {
+  margin-right: 10px !important;
 }
 
 @media (prefers-color-scheme: light) {

@@ -104,50 +104,42 @@ const delFileFunc = async () => {
 <template>
   <van-config-provider theme="dark" class="theme">
     <div class="main" v-if="store.isloaded">
-      <Search></Search>
-      <div class="br"></div>
-      <div class="select">
-        <PopoverSelectButton list-tag="fileTagList" state-watch select-tag="selectFileTag" name="文件" pos="bottom">
-        </PopoverSelectButton>
-        <div class="br"></div>
-        <PopoverSelectButton list-tag="otherTagList" select-tag="selectOtherTag" name="标签" pos="bottom">
-        </PopoverSelectButton>
-        <div class="br"></div>
-        <PopoverSelectButton list-tag="videoTagList" select-tag="selectExTag" name="影视" pos="bottom">
-        </PopoverSelectButton>
-        <div class="br"></div>
-        <PopoverSelectButton list-tag="codeTagList" select-tag="selectExTag" name="代码" pos="bottom">
-        </PopoverSelectButton>
-        <div class="br"></div>
-        <PopoverSelectButton list-tag="picTagList" select-tag="selectExTag" name="图片" pos="bottom">
-        </PopoverSelectButton>
-        <div class="br"></div>
-        <PopoverSelectButton list-tag="zipTagList" select-tag="selectExTag" name="压缩包" pos="bottom">
-        </PopoverSelectButton>
-        <div class="br"></div>
-        <PopoverSelectButton list-tag="officeTagList" select-tag="selectExTag" name="文档" pos="bottom">
-        </PopoverSelectButton>
-        <div class="br"></div>
-        <PopoverSelectButton list-tag="musicTagList" select-tag="selectExTag" name="音乐" pos="bottom">
-        </PopoverSelectButton>
-        <div class="br"></div>
-        <PopoverSelectButton list-tag="delFileList" select-tag="selectDelFileTag" name="删除" pos="bottom"
-          @onclose="delFileFunc">
-        </PopoverSelectButton>
+      <div>
+        <Search></Search>
+        <div class="line">
+          <PopoverSelectButton class="interval" list-tag="fileTagList" state-watch select-tag="selectFileTag" name="文件"
+            pos="bottom">
+          </PopoverSelectButton>
+          <PopoverSelectButton class="interval" list-tag="otherTagList" select-tag="selectOtherTag" name="标签"
+            pos="bottom">
+          </PopoverSelectButton>
+          <PopoverSelectButton class="interval" list-tag="videoTagList" select-tag="selectExTag" name="影视" pos="bottom">
+          </PopoverSelectButton>
+          <PopoverSelectButton class="interval" list-tag="codeTagList" select-tag="selectExTag" name="代码" pos="bottom">
+          </PopoverSelectButton>
+          <PopoverSelectButton class="interval" list-tag="picTagList" select-tag="selectExTag" name="图片" pos="bottom">
+          </PopoverSelectButton>
+          <PopoverSelectButton class="interval" list-tag="zipTagList" select-tag="selectExTag" name="压缩包" pos="bottom">
+          </PopoverSelectButton>
+          <PopoverSelectButton class="interval" list-tag="officeTagList" select-tag="selectExTag" name="文档"
+            pos="bottom">
+          </PopoverSelectButton>
+          <PopoverSelectButton class="interval" list-tag="musicTagList" select-tag="selectExTag" name="音乐" pos="bottom">
+          </PopoverSelectButton>
+          <PopoverSelectButton class="interval" list-tag="delFileList" select-tag="selectDelFileTag" name="删除"
+            pos="bottom" @onclose="delFileFunc">
+          </PopoverSelectButton>
+        </div>
+        <div class="line">
+          <van-button class="interval" type="default" @click="readPathFunc()">读取路径</van-button>
+          <van-button class="interval" type="default" @click="clearChildPathFunc()">清子路径</van-button>
+          <van-button class="interval" type="default" @click="clearPathFunc()">重置路径</van-button>
+          <van-button class="interval" type="default" @click="rebackPathFunc()">后退</van-button>
+          <PopoverCodeButton class="interval"></PopoverCodeButton>
+          <van-button class="interval" type="default" @click="clearCacheFunc()">清除缓存</van-button>
+        </div>
       </div>
-      <div class="select">
-        <van-button type="default" @click="readPathFunc()">读取路径</van-button>
-        <div class="br"></div>
-        <van-button type="default" @click="clearChildPathFunc()">清子路径</van-button>
-        <div class="br"></div>
-        <van-button type="default" @click="clearPathFunc()">重置路径</van-button>
-        <div class="br"></div>
-        <van-button type="default" @click="rebackPathFunc()">后退</van-button>
-        <div class="br"></div>
-        <PopoverCodeButton></PopoverCodeButton>
-        <div class="br"></div>
-        <van-button type="default" @click="clearCacheFunc()">清除缓存</van-button>
-      </div>
+
       <FileList></FileList>
     </div>
   </van-config-provider>
@@ -177,21 +169,10 @@ const delFileFunc = async () => {
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
 }
 
-.br {
-  width: 5px;
-  height: 5px;
-}
 
-.select {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin-top: 10px;
-
-  /* justify-content: space-around; */
-}
 
 .bigFileList {
   flex-grow: 1;

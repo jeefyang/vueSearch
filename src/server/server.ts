@@ -127,7 +127,7 @@ app.get("*", async (req, res) => {
         url = `./build_vue${req.path}`
     }
     console.log(`加载文件:${url}`)
-    if (!fs.existsSync(url)) {
+    if (!fs.existsSync(url) || !fs.statSync(url).isFile()) {
         console.log(url, 404)
         res.sendStatus(404)
         return

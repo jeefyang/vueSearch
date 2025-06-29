@@ -174,6 +174,13 @@ const noReverseColor = '#8a2527'
     </div>
 </template>
 <style scoped>
+
+thead{
+    position: sticky;
+    top:0;
+    z-index:999
+}
+
 .styled-table {
     border-collapse: collapse;
 
@@ -209,6 +216,12 @@ tr:hover .searchHigh {
     color: #ffffff;
     text-align: left;
 }
+
+.styled-table th {
+    position: sticky;
+    top: 0;
+}
+
 
 .styled-table th,
 .styled-table td {
@@ -260,6 +273,5 @@ tr:hover .searchHigh {
 .fileList {
     flex-grow: 1;
     overflow: auto;
-    margin: 15px 0;
 }
 </style>

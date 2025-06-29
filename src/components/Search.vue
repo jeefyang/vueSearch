@@ -53,29 +53,22 @@ const setSearch = () => {
 
 </script>
 <template>
-    <div class="big">
-        <van-button type="primary" @click="setInclude">{{
+    <div class="big line">
+        <input class="search_input interval" type="text" v-model="searchRef" placeholder="请搜索" @change="setSearch">
+        <van-button class="interval" type="primary" @click="setInclude">{{
             includeList[includeList.findIndex(c => c.key == store.searchInclude)]?.name || includeList[0].name
         }}</van-button>
-        <div class="br"></div>
-        <van-button :plain="!store.isCur" type="primary" @click="setCur">当前</van-button>
-        <div class="br"></div>
-        <van-button :plain="!store.isReg" type="primary" @click="setReg">正则</van-button>
-        <div class="br"></div>
-        <van-button :plain="!store.isDisplayHidden" type="primary" @click="setDisplayHidden">隐藏</van-button>
-        <div class="br"></div>
-        <input class="search_input" type="text" v-model="searchRef" placeholder="请搜索" @change="setSearch">
+        <van-button class="interval" :plain="!store.isCur" type="primary" @click="setCur">当前</van-button>
+        <van-button class="interval" :plain="!store.isReg" type="primary" @click="setReg">正则</van-button>
+        <van-button class="interval" :plain="!store.isDisplayHidden" type="primary"
+            @click="setDisplayHidden">隐藏</van-button>
+
         <!-- <van-field v-model="searchRef" placeholder="请搜索" @change="setSearch"></van-field> -->
     </div>
 </template>
 <style scoped>
-.big {
-    display: flex;
-    flex-direction: row;
-}
-
 .search_input {
-    flex-grow: 1;
+    width: 50vw;
 }
 
 .br {

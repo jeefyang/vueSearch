@@ -52,7 +52,7 @@ const closeDiv = () => {
 
 onMounted(() => {
     if (props.stateWatch) {
-        watch([()=>runtimeStore.btnState], () => {
+        watch([() => runtimeStore.btnState], () => {
             let s = runtimeStore.btnState
             let l = s.split(',')
             if (l[0] != props.listTag) {
@@ -80,9 +80,11 @@ onMounted(() => {
                 </div>
                 <div class="br"></div>
                 <div class="btn_parent all">
+                    <van-button class="btn_child" @click="showPopover = false">关闭</van-button>
                     <van-button class="btn_child" type="success" @click="selectAll">全选</van-button>
                     <van-button class="btn_child" type="success" @click="selectReverse">反选</van-button>
                     <van-button class="btn_child" type="success" @click="selectClear">清空</van-button>
+
                 </div>
             </div>
 

@@ -1,4 +1,4 @@
-import { reactive } from "vue"
+import { reactive } from "vue";
 
 export const store = reactive({
 
@@ -20,6 +20,8 @@ export const store = reactive({
     searchInclude: <"file" | "fileFoloder" | "folder">"file",
     /** 是否为当前 */
     isCur: <boolean>false,
+    /** 大小写不敏感 */
+    isLow: <boolean>false,
     /** 显示隐藏文件 */
     isDisplayHidden: <boolean>false,
     /** 可选影视后缀名 */
@@ -44,15 +46,15 @@ export const store = reactive({
     sortType: <"名称" | "大小" | "路径" | "日期">"名称",
     /** 是否反序 */
     isReverseSort: <boolean>false
-})
+});
 
 /** 运行时的store */
 export const runtimeStore = reactive({
     /** 按钮状态 */
     btnState: <string>""
-})
+});
 
 export const staticStore = reactive({
     path: <string>"",
     headname: <string>""
-})
+});

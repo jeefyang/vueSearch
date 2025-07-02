@@ -37,8 +37,8 @@ const downFile = (str: string, fileName: string) => {
             <div v-for="(item, index) in codeList" :key="index" class="big">
                 <textarea class="content">{{ item.content }}</textarea>
                 <div class="small">
-                    <div class="filename">{{ item.fileName }}</div>
-                    <van-button class="btn_child" type="success"
+                    <span class="filename interval">{{ item.fileName }}</span>
+                    <van-button class="btn_child" type="success" size="small"
                         @click="downFile(item.content, item.fileName)">下载</van-button>
 
                 </div>
@@ -51,14 +51,13 @@ const downFile = (str: string, fileName: string) => {
     </div>
 </template>
 <style scoped>
-.big {
-    display: flex;
-    flex-direction: column;
+
+.small{
+    margin-bottom: 10px;
 }
 
-.small {
-    display: flex;
-    flex-direction: row;
+.content{
+    width: 100%;
 }
 
 .br {

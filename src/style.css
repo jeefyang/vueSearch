@@ -81,6 +81,7 @@ button:focus-visible {
 .line {
   display: flex;
   overflow: auto;
+  align-items: center;
   white-space: nowrap;
   margin-bottom: 10px;
 }

@@ -189,7 +189,7 @@ const sortTypeList: (typeof store)["sortType"][] = ["名称", "大小", "日期"
                                 <span>{{ searchNameFunc(item.name, 1) }}</span>
                             </div>
                             <div>
-                                <van-tag style="cursor: pointer" class="interval" type="warning" @click="setPathFunc(item, item.name)">路径</van-tag>
+                                <van-tag v-if="item.type == 'folder'" style="cursor: pointer" class="interval" type="warning" @click="setPathFunc(item, item.name)">路径</van-tag>
 
                                 <van-tag style="cursor: pointer" class="interval" type="danger" @click="copyFunc(item.name)">复制</van-tag>
                             </div>

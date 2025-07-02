@@ -116,7 +116,6 @@ const setHeadnameFunc = (item: JFileType) => {
 const setSearchNameFunc = (item: JFileType) => {
     store.search = item.name;
     jData.saveData();
-    location.reload();
 };
 
 const copyFunc = async (str: string) => {

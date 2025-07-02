@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { jData } from "../data";
 import { store } from "../store";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const searchRef = ref(<string>store.search);
 
@@ -51,6 +51,17 @@ const setSearch = () => {
         jData.saveData();
     }, 1000);
 };
+
+watch(
+    () => store.search,
+    (v) => {
+        if (v == searchRef.value) {
+            return;
+        }
+        searchRef.value = v;
+        setSearch();
+    }
+);
 </script>
 <template>
     <div class="big line">
